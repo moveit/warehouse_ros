@@ -1,0 +1,27 @@
+<package>
+  <name>warehouse</name>
+  <version>0.7.0</version>
+  <description>
+    Persistent storage of ROS data using MongoDB
+  </description>
+  <maintainer email="bhaskara@willowgarage.com">Bhaskara Marthi</maintainer>
+  <license>BSD</license>
+
+  <build_depend>rospy</build_depend>
+  <build_depend>roscpp</build_depend>
+  <build_depend>catkin</build_depend>
+  <build_depend>geometry_msgs</build_depend>
+  <build_depend>rostime</build_depend>
+  <build_depend>rostest</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <build_depend>mongodb-dev</build_depend>
+
+  <run_depend>roscpp</run_depend>
+  <run_depend>rostime</run_depend>
+  <run_depend>geometry_msgs</run_depend>
+  <run_depend>std_msgs</run_depend>
+  <run_depend>mongodb-dev</run_depend>
+
+  
+  <test_depend>gtest</test_depend>
+</package>
