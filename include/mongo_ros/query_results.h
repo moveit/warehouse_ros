@@ -98,6 +98,6 @@ struct QueryResults
 
 } // namespace
 
-#include "../../src/query_results_impl.h"
+#include "impl/query_results_impl.hpp"
 
 #endif // include guard

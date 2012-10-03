@@ -131,6 +131,6 @@ private:
 
 } // namespace
 
-#include "../../src/message_collection_impl.h"
+#include "impl/message_collection_impl.hpp"
 
 #endif // include guard
