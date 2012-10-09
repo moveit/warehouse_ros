@@ -9,7 +9,7 @@
 #   - ~database location: where the db is stored.  Defaults to /tmp/db.
 #   - ~overwrite: whether to overwrite existing db.  Defaults to false.
 
-import roslib; roslib.load_manifest('mongodb')
+import roslib; roslib.load_manifest('warehouse')
 import rospy
 import subprocess as sp
 import sys
@@ -97,7 +97,7 @@ if __name__ == '__main__':
 
     # OK, now actually run mongod
     try:
-        cmd = "mongodb mongod"
+        cmd = "mongod"
         sp.check_call("{2} --dbpath {0} --port {1}".\
                       format(dbpath, port, cmd).split())
     except sp.CalledProcessError as e:
