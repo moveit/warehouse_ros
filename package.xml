@@ -1,10 +1,12 @@
 <package>
-  <name>warehouse</name>
-  <version>0.7.0</version>
+  <name>warehouse_ros</name>
+  <version>0.7.1</version>
   <description>
     Persistent storage of ROS data using MongoDB
   </description>
-  <maintainer email="bhaskara@willowgarage.com">Bhaskara Marthi</maintainer>
+  <author email="bhaskara@willowgarage.com">Bhaskara Marthi</author>
+  <maintainer email="isucan@willowgarage.com">Ioan Sucan</maintainer>
+
   <license>BSD</license>
 
   <build_depend>rospy</build_depend>
