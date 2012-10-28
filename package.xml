@@ -1,6 +1,6 @@
 <package>
   <name>warehouse_ros</name>
-  <version>0.7.3</version>
+  <version>0.7.4</version>
   <description>
     Persistent storage of ROS data using MongoDB
   </description>
@@ -23,7 +23,7 @@
   <run_depend>geometry_msgs</run_depend>
   <run_depend>std_msgs</run_depend>
   <run_depend>mongodb-dev</run_depend>
-
   
   <test_depend>gtest</test_depend>
+
 </package>
