@@ -21,13 +21,13 @@ else(MongoDB_INCLUDE_DIR AND MongoDB_LIBRARIES)
       )
 
 if(WIN32)
-  find_library(MongoDB_LIBRARIES NAMES mongoclient
+  find_library(MongoDB_LIBRARIES NAMES mongo-client
       PATHS
       $ENV{ProgramFiles}/Mongo/*/lib
       $ENV{SystemDrive}/Mongo/*/lib
       )
 else(WIN32)
-  find_library(MongoDB_LIBRARIES NAMES mongoclient
+  find_library(MongoDB_LIBRARIES NAMES mongo-client
       PATHS
       /usr/lib
 	  /usr/lib64
