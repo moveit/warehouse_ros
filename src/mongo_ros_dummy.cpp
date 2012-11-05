@@ -34,7 +34,7 @@
 // libmongoclient.a file at link time. We need this because Ubuntu does not install
 // a .so file for libmongoclient and the wrappers we have in this lib are templated.
 // make this function globally accessible so strip --strip-unneeded does not remove symbols
-void thisFunctionShouldNeverBeCalled(void)
+void _thisFunctionShouldNeverBeCalled_MakeMongoROSincludeTheSymbolsWeNeed__(void)
 {
   ros::NodeHandle nh;
   boost::shared_ptr<mongo::DBClientConnection> conn = mongo_ros::makeDbConnection(nh, "", 0, 0.0f);
