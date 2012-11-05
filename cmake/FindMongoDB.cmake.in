@@ -57,11 +57,3 @@ endif(WIN32)
   mark_as_advanced(MongoDB_INCLUDE_DIR MongoDB_LIBRARIES)
 
 endif(MongoDB_INCLUDE_DIR AND MongoDB_LIBRARIES)
-
-# inject libs into package deps
-if (warehouse_ros_LIBRARIES)
-  list(APPEND warehouse_ros_LIBRARIES ${MongoDB_LIBRARIES})
-endif()
-if (warehouse_ros_INCLUDE_DIRS)
-  list(APPEND warehouse_ros_INCLUDE_DIRS ${MongoDB_INCLUDE_DIR})
-endif()

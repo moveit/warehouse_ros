@@ -26,7 +26,6 @@ set(warehouse_srcs
 add_library(warehouse_ros SHARED ${warehouse_srcs})
 
 target_link_libraries(warehouse_ros ${Boost_LIBRARIES} ${catkin_LIBRARIES} ${MongoDB_LIBRARIES})
-message("BUBU = ${MongoDB_LIBRARIES}")
 catkin_add_gtest(test_mongo_roscpp test/test_mongo_ros.cpp)
 target_link_libraries(test_mongo_roscpp warehouse_ros ${MongoDB_LIBRARIES})
 
