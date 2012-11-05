@@ -21,7 +21,8 @@ include_directories(include ${BOOST_INCLUDE_DIRS} ${catkin_INCLUDE_DIRS} ${Mongo
 link_directories(${catkin_LINK_DIRS})
 
 set(warehouse_srcs
-  src/mongo_ros.cpp)
+  src/mongo_ros.cpp
+  src/mongo_ros_dummy.cpp)
 
 add_library(warehouse_ros SHARED ${warehouse_srcs})
 
