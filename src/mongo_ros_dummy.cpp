@@ -30,12 +30,10 @@
 
 #include <mongo_ros/mongo_ros.h>
 
-namespace 
-{
 // add this dummy function so the .so file copies everything we need from the
 // libmongoclient.a file at link time. We need this because Ubuntu does not install
 // a .so file for libmongoclient and the wrappers we have in this lib are templated.
-void thisFunctionShouldNeverBeCalled(void)
+static void thisFunctionShouldNeverBeCalled(void)
 {
   ros::NodeHandle nh;
   boost::shared_ptr<mongo::DBClientConnection> conn = mongo_ros::makeDbConnection(nh, "", 0, 0.0f);
@@ -44,6 +42,7 @@ void thisFunctionShouldNeverBeCalled(void)
   mongo::GridFile f = gfs->findFile(q);
   gfs->removeFile("");
   q = gfs->storeFile(NULL, 0, "");
+  mongo::LT;
+  mongo::GT;
+  delete gfs;
 }
-
-} 

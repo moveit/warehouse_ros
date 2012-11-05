@@ -28,7 +28,7 @@ add_library(warehouse_ros SHARED ${warehouse_srcs})
 
 target_link_libraries(warehouse_ros ${Boost_LIBRARIES} ${catkin_LIBRARIES} ${MongoDB_LIBRARIES})
 catkin_add_gtest(test_mongo_roscpp test/test_mongo_ros.cpp)
-target_link_libraries(test_mongo_roscpp warehouse_ros ${MongoDB_LIBRARIES})
+target_link_libraries(test_mongo_roscpp warehouse_ros)
 
 # file(COPY src/wrapper.py DESTINATION ${CATKIN_BUILD_PREFIX}/lib/warehouse_ros)
 # catkin_python_setup()
@@ -38,3 +38,4 @@ target_link_libraries(test_mongo_roscpp warehouse_ros ${MongoDB_LIBRARIES})
 install(TARGETS warehouse_ros LIBRARY DESTINATION lib)
 install(DIRECTORY include/ DESTINATION include)
 install(PROGRAMS src/mongo_wrapper_ros.py DESTINATION bin)
+ 
