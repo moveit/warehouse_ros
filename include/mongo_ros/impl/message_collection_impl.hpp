@@ -61,6 +61,7 @@ MessageCollection<M>::MessageCollection (const string& db,
                                          const unsigned db_port,
                                          const float timeout) :
   ns_(db+"."+coll),
+  md5sum_matches_(true),
   insertion_pub_(nh_.advertise<std_msgs::String>("warehouse/"+db+"/"+coll+\
                                                  "/inserts", 100, true))
 {
@@ -93,7 +94,19 @@ void MessageCollection<M>::initialize (const string& db, const string& coll,
                                 << "md5sum" << md5));
   }
   else
+  {
     ROS_DEBUG_NAMED("create_collection", "Not inserting metadata");
+    typedef typename mt::MD5Sum<M> Md5;
+    const string md5 = Md5().value();
+    if (!conn_->count(meta_ns, BSON("name" << coll << "md5sum" << md5)))
+    {
+      md5sum_matches_ = false;
+      typedef typename mt::DataType<M> DataType;
+      const string datatype = DataType().value();
+      ROS_ERROR("The md5 sum for message %s changed to %s. Only reading metadata.", 
+                datatype.c_str(), md5.c_str());
+    }
+  }
   
   if (insertion_pub_.getNumSubscribers()==0)
   {
@@ -117,6 +130,9 @@ template <class M>
 void MessageCollection<M>::insert
 (const M& msg, const Metadata& metadata)
 {
+  if (!md5sum_matches_)
+    throw Md5SumException("Cannot insert additional elements.");
+  
   /// Get the BSON and id from the metadata
   const mongo::BSONObj bson = metadata;
   mongo::OID id;
@@ -155,6 +171,9 @@ MessageCollection<M>::queryResults (const mongo::Query& query,
                                     const string& sort_by,
                                     const bool ascending) const
 {
+  if (!md5sum_matches_ && !metadata_only)
+    throw Md5SumException("Can only query metadata.");
+  
   mongo::Query copy(query.obj);
   ROS_DEBUG_NAMED("query", "Sending query %s to %s", copy.toString().c_str(),
                   ns_.c_str());
@@ -173,7 +192,7 @@ MessageCollection<M>::pullAllResults (const mongo::Query& query,
                                       const bool metadata_only,
                                       const string& sort_by,
                                       const bool ascending) const
-{
+{  
   typename QueryResults<M>::range_t res = queryResults(query, metadata_only,
                                                        sort_by, ascending);
   return vector<typename MessageWithMetadata<M>::ConstPtr>
@@ -237,6 +256,12 @@ template <class M>
 unsigned MessageCollection<M>::count ()
 {
   return conn_->count(ns_);
+}
+
+template <class M>
+bool MessageCollection<M>::md5SumMatches () const
+{
+  return md5sum_matches_;
 }
 
 } // namespace

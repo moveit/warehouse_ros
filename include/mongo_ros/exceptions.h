@@ -72,6 +72,13 @@ struct DbConnectException: public MongoRosException
     MongoRosException ("Couldn't connect to MongoDB instance") {}
 };      
 
+/// \brief Different md5 sum for messages
+struct Md5SumException: public MongoRosException
+{
+  Md5SumException (const string& failure) :
+    MongoRosException (format("The md5 sum for the ROS messages saved in the database differs from that of the compiled message. %1%") % failure) {}
+};
+
 
 } // namespace
 

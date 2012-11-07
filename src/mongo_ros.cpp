@@ -38,6 +38,7 @@
 
 #include <mongo_ros/mongo_ros.h>
 #include <mongo_ros/exceptions.h>
+#include <mongo_ros/message_collection.h>
 
 namespace mongo_ros
 {

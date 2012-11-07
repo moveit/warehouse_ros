@@ -114,6 +114,10 @@ public:
   /// \brief Count messages in collection
   unsigned count ();
 
+  /// \brief Check if the md5 sum of the messages previously stored in 
+  /// the database matches that of the compiled message
+  bool md5SumMatches () const;
+  
 private:
 
   // Called by constructors
@@ -124,6 +128,7 @@ private:
   const std::string ns_;
   boost::shared_ptr<mongo::DBClientConnection> conn_;
   boost::shared_ptr<mongo::GridFS> gfs_;
+  bool md5sum_matches_;
   ros::NodeHandle nh_;
   ros::Publisher insertion_pub_;
 };
