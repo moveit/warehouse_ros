@@ -8,6 +8,7 @@
   <maintainer email="isucan@willowgarage.com">Ioan Sucan</maintainer>
 
   <license>BSD</license>
+  <url>http://ros.org/wiki/warehouse_ros</url>
 
   <build_depend>rospy</build_depend>
   <build_depend>roscpp</build_depend>
