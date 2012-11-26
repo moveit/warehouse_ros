@@ -30,12 +30,7 @@ target_link_libraries(warehouse_ros ${Boost_LIBRARIES} ${catkin_LIBRARIES} ${Mon
 catkin_add_gtest(test_mongo_roscpp test/test_mongo_ros.cpp)
 target_link_libraries(test_mongo_roscpp warehouse_ros)
 
-# file(COPY src/wrapper.py DESTINATION ${CATKIN_BUILD_PREFIX}/lib/warehouse_ros)
-# catkin_python_setup()
-# install
-# unit tests
-
 install(TARGETS warehouse_ros LIBRARY DESTINATION lib)
 install(DIRECTORY include/ DESTINATION include)
-install(PROGRAMS src/mongo_wrapper_ros.py DESTINATION bin)
+install(PROGRAMS src/mongo_wrapper_ros.py DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
  

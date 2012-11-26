@@ -9,7 +9,7 @@
 #   - ~database location: where the db is stored.  Defaults to /tmp/db.
 #   - ~overwrite: whether to overwrite existing db.  Defaults to false.
 
-import roslib; roslib.load_manifest('warehouse')
+import roslib; roslib.load_manifest('warehouse_ros')
 import rospy
 import subprocess as sp
 import sys
