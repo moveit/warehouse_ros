@@ -1,6 +1,6 @@
 <package>
   <name>warehouse_ros</name>
-  <version>0.7.11</version>
+  <version>0.7.12</version>
   <description>
     Persistent storage of ROS data using MongoDB
   </description>
@@ -10,9 +10,10 @@
   <license>BSD</license>
   <url>http://ros.org/wiki/warehouse_ros</url>
 
+  <buildtool_depend>catkin</buildtool_depend>
+
   <build_depend>rospy</build_depend>
   <build_depend>roscpp</build_depend>
-  <build_depend>catkin</build_depend>
   <build_depend>geometry_msgs</build_depend>
   <build_depend>rostime</build_depend>
   <build_depend>rostest</build_depend>
