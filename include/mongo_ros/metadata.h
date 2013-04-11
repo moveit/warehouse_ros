@@ -41,6 +41,7 @@
 
 // We have to include this top-level include here because
 // the mongo c++ library is not robust to reincludes
+#include <malloc.h>
 #include <mongo/client/gridfs.h>
 #include <ros/ros.h>
 
