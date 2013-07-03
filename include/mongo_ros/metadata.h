@@ -42,7 +42,11 @@
 // We have to include this top-level include here because
 // the mongo c++ library is not robust to reincludes
 #include <malloc.h>
+
+#define MONGO_EXPOSE_MACROS
 #include <mongo/client/gridfs.h>
+#include <mongo/client/undef_macros.h>
+
 #include <ros/ros.h>
 
 

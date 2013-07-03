@@ -7,15 +7,17 @@ find_package(catkin REQUIRED
   rostest
   rostime
   std_msgs)
-find_package(Boost COMPONENTS system thread filesystem)
+find_package(Boost COMPONENTS system filesystem thread)
+find_package(OpenSSL)
 
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES warehouse_ros
-  DEPENDS roscpp geometry_msgs rostime std_msgs Boost
-  CFG_EXTRAS FindMongoDB.cmake)
+  CATKIN_DEPENDS roscpp geometry_msgs rostime std_msgs
+  DEPENDS Boost
+  )
 
-include(cmake/FindMongoDB.cmake.in)
+include(cmake/FindMongoDB.cmake)
 
 include_directories(include ${BOOST_INCLUDE_DIRS} ${catkin_INCLUDE_DIRS} ${MongoDB_INCLUDE_DIR})
 link_directories(${catkin_LINK_DIRS})
@@ -25,13 +27,11 @@ set(warehouse_srcs
   src/mongo_ros_dummy.cpp)
 
 add_library(warehouse_ros SHARED ${warehouse_srcs})
-add_definitions(-DMONGO_EXPOSE_MACROS)
 
-target_link_libraries(warehouse_ros ${Boost_LIBRARIES} ${catkin_LIBRARIES} ${MongoDB_LIBRARIES})
+target_link_libraries(warehouse_ros ${catkin_LIBRARIES} ${MongoDB_LIBRARIES} ${OPENSSL_LIBRARIES} ${Boost_LIBRARIES})
 catkin_add_gtest(test_mongo_roscpp test/test_mongo_ros.cpp)
 target_link_libraries(test_mongo_roscpp warehouse_ros)
 
 install(TARGETS warehouse_ros LIBRARY DESTINATION lib)
 install(DIRECTORY include/ DESTINATION include)
 install(PROGRAMS src/mongo_wrapper_ros.py DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
- 
