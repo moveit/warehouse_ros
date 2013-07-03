@@ -23,7 +23,7 @@ else(MongoDB_INCLUDE_DIR AND MongoDB_LIBRARIES)
       $ENV{ProgramFiles}/Mongo/*/include
       $ENV{SystemDrive}/Mongo/*/include
       )
-  find_path(MongoDB_INCLUDE_DIR mongo/client/dbclientinterface.h
+  find_path(MongoDB_INCLUDE_DIR mongo/client/dbclient.h
     ${MongoDB_PossibleIncludePaths})
 
   if(MongoDB_INCLUDE_DIR)
