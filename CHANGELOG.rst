@@ -2,7 +2,7 @@
 Changelog for package warehouse_ros
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-0.8.1 (2013-07-03)
+0.8.2 (2013-07-03)
 ------------------
 * fix typo and use correct install location
 * add config.h.in for deciding how to include mongo headers
