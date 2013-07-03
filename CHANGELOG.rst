@@ -2,6 +2,10 @@
 Changelog for package warehouse_ros
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* update how we find MongoDB
+
 0.8.2 (2013-07-03)
 ------------------
 * fix typo and use correct install location
