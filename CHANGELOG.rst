@@ -2,8 +2,8 @@
 Changelog for package warehouse_ros
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.8.4 (2013-07-03)
+------------------
 * update how we find MongoDB
 
 0.8.2 (2013-07-03)
