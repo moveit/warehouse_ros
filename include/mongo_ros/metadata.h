@@ -41,7 +41,11 @@
 
 // We have to include this top-level include here because
 // the mongo c++ library is not robust to reincludes
+#ifdef __APPLE__
+#include <malloc/malloc.h>
+#else
 #include <malloc.h>
+#endif
 #include <mongo_ros/config.h>
 #include <ros/ros.h>
 
