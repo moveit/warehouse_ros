@@ -2,8 +2,8 @@
 Changelog for package warehouse_ros
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.8.5 (2014-02-23)
+------------------
 * Fixed malloc.h inclusion on Mac OS X
 * Rename README.rst to README.md
 * added travis support
