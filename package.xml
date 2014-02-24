@@ -5,7 +5,7 @@
     Persistent storage of ROS data using MongoDB
   </description>
   <author email="bhaskara@willowgarage.com">Bhaskara Marthi</author>
-  <maintainer email="isucan@willowgarage.com">Ioan Sucan</maintainer>
+  <maintainer email="isucan@google.com">Ioan Sucan</maintainer>
 
   <license>BSD</license>
   <url>http://ros.org/wiki/warehouse_ros</url>
