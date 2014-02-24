@@ -2,6 +2,13 @@
 Changelog for package warehouse_ros
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fixed malloc.h inclusion on Mac OS X
+* Rename README.rst to README.md
+* added travis support
+* Contributors: Acorn, Dave Hershberger, Ioan A Sucan, Marco Esposito
+
 0.8.4 (2013-07-03)
 ------------------
 * update how we find MongoDB
