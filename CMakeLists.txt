@@ -10,10 +10,10 @@ find_package(catkin REQUIRED
 find_package(Boost COMPONENTS system filesystem thread)
 find_package(OpenSSL)
 
-file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/include")
+file(MAKE_DIRECTORY "${CATKIN_DEVEL_PREFIX}/include")
 
 catkin_package(
-  INCLUDE_DIRS ${CMAKE_CURRENT_BINARY_DIR}/include include
+  INCLUDE_DIRS ${CATKIN_DEVEL_PREFIX}/include include
   LIBRARIES warehouse_ros
   CATKIN_DEPENDS roscpp geometry_msgs rostime std_msgs
   DEPENDS Boost
@@ -24,9 +24,9 @@ include(cmake/FindMongoDB.cmake)
 if (NOT MongoDB_EXPOSE_MACROS)
   add_definitions(-DMONGO_EXPOSE_MACROS)
 endif()
-configure_file("include/mongo_ros/config.h.in" "include/mongo_ros/config.h")
+configure_file("include/mongo_ros/config.h.in" "${CATKIN_DEVEL_PREFIX}/include/mongo_ros/config.h")
 
-include_directories(${CMAKE_CURRENT_BINARY_DIR}/include include ${catkin_INCLUDE_DIRS} ${MongoDB_INCLUDE_DIR} ${Boost_INCLUDE_DIRS})
+include_directories(${CATKIN_DEVEL_PREFIX}/include include ${catkin_INCLUDE_DIRS} ${MongoDB_INCLUDE_DIR} ${Boost_INCLUDE_DIRS})
 link_directories(${catkin_LINK_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
 
@@ -43,4 +43,4 @@ target_link_libraries(test_mongo_roscpp warehouse_ros)
 install(TARGETS warehouse_ros LIBRARY DESTINATION lib)
 install(DIRECTORY include/ DESTINATION include FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp")
 install(PROGRAMS src/mongo_wrapper_ros.py DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
-install(FILES "${CMAKE_CURRENT_BINARY_DIR}/include/mongo_ros/config.h" DESTINATION include/mongo_ros)
+install(FILES "${CATKIN_DEVEL_PREFIX}/include/mongo_ros/config.h" DESTINATION include/mongo_ros)
