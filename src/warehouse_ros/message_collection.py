@@ -87,8 +87,8 @@ class MessageCollection:
 
         # Set up insertion pub
         insertion_topic = 'warehouse/{0}/{1}/inserts'.format(db, coll)
-        self.insertion_pub = rospy.Publisher(insertion_topic,
-                                             std_msgs.msg.String, latch=True)
+        self.insertion_pub = rospy.Publisher(insertion_topic, std_msgs.msg.String,
+                                             latch=True, queue_size=5)
         
 
     def ensure_index(self, ind):
