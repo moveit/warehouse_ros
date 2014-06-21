@@ -91,15 +91,16 @@ class MessageCollection:
                                              latch=True, queue_size=5)
         
 
-    def ensure_index(self, ind):
+    def ensure_index(self, ind, **kwargs):
         info = self.coll.index_information()
         if ind in info:
             rospy.logdebug("Index {0} already exists".format(ind))
         else:
-            self.coll.ensure_index(ind, name=ind)
+            kwargs['name'] = ind
+            self.coll.ensure_index(ind, **kwargs)
 
 
-    def insert(self, m, metadata={}):
+    def insert(self, m, metadata={}, **kwargs):
         """
         @param m: Message to insert
         @param metadata: Dictionary of metadata to associate with message
@@ -116,7 +117,7 @@ class MessageCollection:
         entry['creation_time'] = rospy.Time.now().to_sec()
 
         # Insert message info
-        self.coll.insert(entry)
+        self.coll.insert(entry, **kwargs)
 
         # Publish ros notification
         s = json.dumps(entry, default=bson.json_util.default)
