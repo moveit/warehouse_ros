@@ -91,12 +91,13 @@ class MessageCollection:
                                              latch=True, queue_size=5)
         
 
-    def ensure_index(self, ind):
+    def ensure_index(self, ind, **kwargs):
         info = self.coll.index_information()
         if ind in info:
             rospy.logdebug("Index {0} already exists".format(ind))
         else:
-            self.coll.ensure_index(ind, name=ind)
+            kwargs['name'] = ind
+            self.coll.ensure_index(ind, **kwargs)
 
 
     def insert(self, m, metadata={}):
