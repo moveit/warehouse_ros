@@ -1,6 +1,6 @@
 <package>
   <name>warehouse_ros</name>
-  <version>0.8.6</version>
+  <version>0.8.7</version>
   <description>
     Persistent storage of ROS data using MongoDB
   </description>
