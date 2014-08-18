@@ -13,13 +13,18 @@ find_package(Boost COMPONENTS system filesystem thread)
 find_package(OpenSSL)
 find_package(MongoDB)
 
+set(MONGO_EXPORT)
+if("${MongoDB_LIBRARIES}" MATCHES "\\.so$")
+  set(MONGO_EXPORT MongoDB)
+endif()
+
 file(MAKE_DIRECTORY "${CATKIN_DEVEL_PREFIX}/include")
 
 catkin_package(
   INCLUDE_DIRS ${CATKIN_DEVEL_PREFIX}/include include
   LIBRARIES warehouse_ros
   CATKIN_DEPENDS roscpp geometry_msgs rostime std_msgs
-  DEPENDS Boost MongoDB
+  DEPENDS Boost ${MONGO_EXPORT}
   )
 
 
