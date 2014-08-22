@@ -20,6 +20,8 @@ endif()
 
 file(MAKE_DIRECTORY "${CATKIN_DEVEL_PREFIX}/include")
 
+catkin_python_setup()
+
 catkin_package(
   INCLUDE_DIRS ${CATKIN_DEVEL_PREFIX}/include include
   LIBRARIES warehouse_ros
