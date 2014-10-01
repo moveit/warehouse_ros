@@ -2,6 +2,33 @@
 Changelog for package warehouse_ros
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge pull request `#13 <https://github.com/ros-planning/warehouse_ros/issues/13>`_ from corot/master
+  Issue `#11 <https://github.com/ros-planning/warehouse_ros/issues/11>`_: Add a Python library
+* Merge pull request `#15 <https://github.com/ros-planning/warehouse_ros/issues/15>`_ from v4hn/shared-static-mongodb
+  only export MongoDB dependency for shared mongodb-library
+* only export MongoDB dependency for shared mongodb-library
+  libmongoclient.a uses quite a number of other libs and the exact
+  requirements can't be read from a cmake/pc file.
+  Therefore it makes more sense to keep the dependency hidden from ROS
+  when we use the static lib. libwarehouse_ros then provides all required functions.
+  ... This is a bit like creating a libmongoclient.so, but the whole problem
+  exists because debian/ubuntu don't provide this one, right?
+  The shared library can - and has to - be exported as a dependency to ROS.
+* Missing part of https://github.com/corot/world_canvas/issues/10:
+  requires both mongodb and mongodb-dev
+* Merge branch 'master' of https://github.com/corot/warehouse_ros.git
+* Add kwargs also to insert so we can solves issues as
+  https://github.com/corot/world_canvas/issues/13
+* Add kwargs to ensure_index so we can solves issues as
+  https://github.com/corot/world_canvas/issues/13
+* Add python-pymongo dependency
+* Issue https://github.com/corot/world_canvas/issues/11: rospy queue_size
+  warnings
+* Issue `#11 <https://github.com/ros-planning/warehouse_ros/issues/11>`_: Add a Python library
+* Contributors: Ioan A Sucan, corot, v4hn
+
 0.8.5 (2014-02-23)
 ------------------
 * Fixed malloc.h inclusion on Mac OS X
