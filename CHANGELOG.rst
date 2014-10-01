@@ -2,8 +2,8 @@
 Changelog for package warehouse_ros
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.8.8 (2014-10-01)
+------------------
 * Merge pull request `#13 <https://github.com/ros-planning/warehouse_ros/issues/13>`_ from corot/master
   Issue `#11 <https://github.com/ros-planning/warehouse_ros/issues/11>`_: Add a Python library
 * Merge pull request `#15 <https://github.com/ros-planning/warehouse_ros/issues/15>`_ from v4hn/shared-static-mongodb
