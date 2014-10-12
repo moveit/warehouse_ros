@@ -27,7 +27,7 @@
   <run_depend>rostime</run_depend>
   <run_depend>geometry_msgs</run_depend>
   <run_depend>std_msgs</run_depend>
-  <run_depend>mongodb</run_depend>
+  <run_depend>mongodb-dev</run_depend>
   <run_depend>python-pymongo</run_depend>
   <run_depend>curl</run_depend>
   <run_depend>libssl-dev</run_depend>
