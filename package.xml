@@ -12,6 +12,7 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
+  <build_depend>mongo_cxx_driver</build_depend>
   <build_depend>rospy</build_depend>
   <build_depend>roscpp</build_depend>
   <build_depend>geometry_msgs</build_depend>
@@ -23,6 +24,7 @@
   <build_depend>curl</build_depend>
   <build_depend>libssl-dev</build_depend>
 
+  <run_depend>mongo_cxx_driver</run_depend>
   <run_depend>roscpp</run_depend>
   <run_depend>rostime</run_depend>
   <run_depend>geometry_msgs</run_depend>

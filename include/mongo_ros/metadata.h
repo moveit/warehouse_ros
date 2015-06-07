@@ -49,6 +49,9 @@
 #include <mongo_ros/config.h>
 #include <ros/ros.h>
 
+#ifdef MONGO_26
+#include <mongo/db/json.h>
+#endif
 
 namespace mongo_ros
 {

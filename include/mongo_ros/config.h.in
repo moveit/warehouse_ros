@@ -42,6 +42,11 @@
 
 #cmakedefine01 MongoDB_EXPOSE_MACROS
 
+#if MONGO_26
+#include <mongo/client/redef_macros.h>
+#include <mongo/client/dbclientcursor.h>
+#endif
+
 #if MongoDB_EXPOSE_MACROS
 #  define MONGO_EXPOSE_MACROS
 #  include <mongo/client/gridfs.h>

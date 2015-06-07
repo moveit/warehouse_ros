@@ -33,6 +33,10 @@ catkin_package(
 if (NOT MongoDB_EXPOSE_MACROS)
   add_definitions(-DMONGO_EXPOSE_MACROS)
 endif()
+if ((MongoDB_VERSION_MAJOR VERSION_EQUAL 2) AND (MongoDB_VERSION_MINOR VERSION_EQUAL 6))
+  add_definitions(-DMONGO_26=1)
+endif()
+
 configure_file("include/mongo_ros/config.h.in" "${CATKIN_DEVEL_PREFIX}/include/mongo_ros/config.h")
 
 include_directories(${CATKIN_DEVEL_PREFIX}/include include ${catkin_INCLUDE_DIRS} ${MongoDB_INCLUDE_DIR} ${Boost_INCLUDE_DIRS})

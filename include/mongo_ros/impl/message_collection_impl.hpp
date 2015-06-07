@@ -122,7 +122,11 @@ template <class M>
 MessageCollection<M>& MessageCollection<M>::ensureIndex
 (const string& field)
 {
+#if MONGO_26
+  conn_->createIndex(ns_, BSON(field << 1));
+#else
   conn_->ensureIndex(ns_, BSON(field << 1));
+#endif
   return *this;
 }
 
