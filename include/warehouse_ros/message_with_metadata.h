@@ -31,73 +31,80 @@
 /**
  * \file 
  * 
- * Defines an iterator type over results of a query
+ * Defines the MessageWithMetadata class as well as some helper functions
+ * to create and manipulate Metadata objects
  *
  * \author Bhaskara Marthi
  */
 
-#ifndef MONGO_ROS_QUERY_RESULTS_H
-#define MONGO_ROS_QUERY_RESULTS_H
+#ifndef WAREHOUSE_ROS_MESSAGE_WITH_METADATA_H
+#define WAREHOUSE_ROS_MESSAGE_WITH_METADATA_H
 
-#include <mongo_ros/message_with_metadata.h>
-#include <boost/optional.hpp>
+#include <warehouse_ros/metadata.h>
 
-namespace mongo_ros
+namespace warehouse_ros
 {
 
-// To avoid some const-correctness issues we wrap Mongo's returned auto_ptr in
-// another pointer
-typedef std::auto_ptr<mongo::DBClientCursor> Cursor;
-typedef boost::shared_ptr<Cursor> CursorPtr;
+/************************************************************
+ * MessageWithMetadata
+ ***********************************************************/
 
+/// \brief Class that wraps (via inheritance) a ROS message type, together
+/// with additional metadata (a yaml dictionary)
+/// \tparam M the message type being wrapped
 template <class M>
-class ResultIterator :
-    public boost::iterator_facade<ResultIterator<M>,
-                                  typename MessageWithMetadata<M>::ConstPtr,
-                                  boost::single_pass_traversal_tag,
-                                  typename MessageWithMetadata<M>::ConstPtr >
+struct MessageWithMetadata : public M
 {
 public:
+  MessageWithMetadata(Metadata::ConstPtr metadata,
+                       const M& msg = M()) :
+    M(msg), metadata_(metadata)
+  {}
 
-  /// \brief Constructor
-  ResultIterator (boost::shared_ptr<mongo::DBClientConnection> conn,
-                  const std::string& ns,
-                  const mongo::Query& query,
-                  boost::shared_ptr<mongo::GridFS> gfs,
-                  bool metadata_only);
+  MessageWithMetadata(const MessageWithMetadata& m) :
+    M(m), metadata_(m.metadata_)
+  {}
 
-  /// \brief Copy constructor
-  ResultIterator (const ResultIterator& rhs);
+  MessageWithMetadata()
+  {}
 
-  /// \brief Constructor for past_the_end iterator
-  ResultIterator ();
+  Metadata::ConstPtr metadata_;
 
-private:
+  std::string lookupString(const std::string& name) const
+  {
+    return metadata_->lookupString(name);
+  }
 
-  friend class boost::iterator_core_access;
+  double lookupDouble(const std::string& name) const
+  {
+    return metadata_->lookupDouble(name);
+  }
 
-  // Member functions needed to be an iterator
-  void increment ();
-  typename MessageWithMetadata<M>::ConstPtr dereference () const;
-  bool equal (const ResultIterator<M>& other) const;
+  int lookupInt(const std::string& name) const
+  {
+    return metadata_->lookupInt(name);
+  }
 
-  const bool metadata_only_;
-  CursorPtr cursor_;
-  boost::optional<mongo::BSONObj> next_;
-  boost::shared_ptr<mongo::GridFS> gfs_;
+  bool lookupBool(const std::string& name) const
+  {
+    return metadata_->lookupBool(name);
+  }
+
+  bool lookupField(const std::string& name) const
+  {
+    return metadata_->lookupField(name);
+  }
+
+  std::set<std::string> lookupFieldNames() const
+  {
+    return metadata_->lookupFieldNames();
+  }
+
+  typedef boost::shared_ptr<MessageWithMetadata<M> > Ptr;
+  typedef boost::shared_ptr<const MessageWithMetadata<M> > ConstPtr;
 };
-
-/// A templated typedef for convenience
-template <class M>
-struct QueryResults
-{
-  typedef std::pair<ResultIterator<M>, ResultIterator<M> > range_t;
-};
-
 
 
 } // namespace
-
-#include "impl/query_results_impl.hpp"
 
 #endif // include guard

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008, Willow Garage, Inc.
+ * Copyright (c) 2015, Fetch Robotics
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,43 +31,31 @@
 /**
  * \file 
  * 
- * Db-level operations.  Most operations are in message_collection.h
+ * Implementation of template methods of DatabaseConnection
+ * Only to be included by database_connection.h
  *
- * \author Bhaskara Marthi
+ * \author Connor Brew
  */
 
-#ifndef MONGO_ROS_MONGO_ROS_H
-#define MONGO_ROS_MONGO_ROS_H
-
-#include <mongo_ros/metadata.h>
-#include <ros/ros.h>
-#include <boost/shared_ptr.hpp>
-
-namespace mongo_ros
+namespace warehouse_ros
 {
 
-boost::shared_ptr<mongo::DBClientConnection>
-makeDbConnection (const ros::NodeHandle& nh, const std::string& host="",
-                  const unsigned& port=0, float timeout=300.0);
-  
+template <class M>
+MessageCollection<M> DatabaseConnection::openCollection(const std::string& db_name,
+                                                        const std::string& collection_name)
+{
+  if (!isConnected())
+    throw DbConnectException("Cannot open collection.");
+  return MessageCollection<M>(openCollectionHelper(db_name, collection_name));
+}
 
-/// Return the ROS Message type of a given collection
-std::string messageType (mongo::DBClientConnection& conn,
-                         const std::string& db,
-                         const std::string& coll);
-
-/// Drop a db and all its collections
-/// Uses the connection parameters given by the warehouse_host and
-/// warehouse_port ROS parameters
-void dropDatabase (const std::string& db);
-
-/// Drop a db and its collections, given host and port parameters,
-/// and a timeout.  A DbClientConnection exception will be thrown if
-/// we can't connect in time.
-void dropDatabase (const std::string& db, const std::string& host,
-                   unsigned port, const float timeout);
-
+template <class M>
+typename MessageCollection<M>::Ptr DatabaseConnection::openCollectionPtr(const std::string& db_name,
+                                                                          const std::string& collection_name)
+{
+  if (!isConnected())
+    throw DbConnectException("Cannot open collection.");
+  return typename MessageCollection<M>::Ptr(new MessageCollection<M>(openCollectionHelper(db_name, collection_name)));
+}
 
 } // namespace
-
-#endif // include guard
