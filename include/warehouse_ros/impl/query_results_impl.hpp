@@ -38,85 +38,73 @@
  */
 
 
-namespace mongo_ros
+namespace warehouse_ros
 {
-
-using std::vector;
-using std::string;
 
 template <class M>
-ResultIterator<M>::ResultIterator
-(boost::shared_ptr<mongo::DBClientConnection> conn,
- const string& ns, const mongo::Query& query,
- boost::shared_ptr<mongo::GridFS> gfs,
- const bool metadata_only) :
-  metadata_only_(metadata_only),
-  cursor_(new Cursor(conn->query(ns, query))),
-  gfs_(gfs)
+ResultIterator<M>::ResultIterator(ResultIteratorHelper::Ptr results, bool metadata_only) :
+  results_(results), metadata_only_(metadata_only)
 {
-  if ((*cursor_)->more())
-    next_ = (*cursor_)->nextSafe();
+  if (!results_->hasData())
+    results_.reset();
 }
 
 template <class M>
-ResultIterator<M>::ResultIterator () :
+ResultIterator<M>::ResultIterator(const ResultIterator<M>& other) :
+  results_(other.results_), metadata_only_(other.metadata_only_)
+{
+}
+
+template <class M>
+ResultIterator<M>::ResultIterator() :
   metadata_only_(false)
 {
 }
 
 template <class M>
-ResultIterator<M>::ResultIterator (const ResultIterator<M>& res) :
-  metadata_only_(res.metadata_only_), cursor_(res.cursor_),
-  next_(res.next_), gfs_(res.gfs_)
+ResultIterator<M>::~ResultIterator()
 {
 }
 
 template <class M>
-void ResultIterator<M>::increment ()
+ResultIterator<M>& ResultIterator<M>::operator=(const ResultIterator& other)
 {
-  ROS_ASSERT (next_);
-  if ((*cursor_)->more())
-    next_ = (*cursor_)->nextSafe();
-  else
-    next_.reset();
+  results_ = other.results_;
+  metadata_only_ = other.metadata_only_;
+  return *this;
+}
+
+template <class M>
+void ResultIterator<M>::increment()
+{
+  if (!results_->next())
+  {
+    results_.reset();
+  }
 }
 
 template <class M>
 typename MessageWithMetadata<M>::ConstPtr
-ResultIterator<M>::dereference () const
+ResultIterator<M>::dereference() const
 {
-  ROS_ASSERT (next_);
-  // Get the raw message if necessary, else
-  // use a default constructed one
-  typename MessageWithMetadata<M>::Ptr m(new MessageWithMetadata<M>(next_->copy()));
+  ROS_ASSERT(results_);
+
+  typename MessageWithMetadata<M>::Ptr msg(new MessageWithMetadata<M>(results_->metadata()));
   if (!metadata_only_)
   {
-    mongo::OID blob_id;
-    (*next_)["blob_id"].Val(blob_id);
-    mongo::BSONObj q = BSON ("_id" << blob_id);
-    mongo::GridFile f = gfs_->findFile(q);
-    ROS_ASSERT(f.exists());
-    std::stringstream ss (std::ios_base::out);
-    f.write(ss);
-    std::string str = ss.str();
-
+    std::string str = results_->message();
     uint8_t* buf = (uint8_t*) str.c_str();
     ros::serialization::IStream istream(buf, str.size());
-    ros::serialization::Serializer<M>::read(istream, *m);
+    ros::serialization::Serializer<M>::read(istream, *msg);
   }
-
-  return m;
+  return msg;
 }
 
 template <class M>
-bool ResultIterator<M>::equal (const ResultIterator<M>& other) const
+bool ResultIterator<M>::equal(const ResultIterator<M>& other) const
 {
-  // Incomplete; the only case we care about is whether we're at the end yet
-  if (next_ && other.next_)
-    ROS_WARN ("Unexpected case of equality check of two not-past-the-end "
-              "iterators in ResultIterator");
-  return (!next_ && !other.next_);
+  // Incomplete, the only case we care about is whether iter is at the end
+  return (!results_ && !other.results_);
 }
-
 
 } // namespace

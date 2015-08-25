@@ -31,55 +31,74 @@
 /**
  * \file 
  * 
- * Exceptions thrown by mongo_ros
+ * Defines an iterator type over results of a query
  *
  * \author Bhaskara Marthi
  */
 
-#ifndef MONGO_ROS_EXCEPTIONS_H
-#define MONGO_ROS_EXCEPTIONS_H
+#ifndef WAREHOUSE_ROS_QUERY_RESULTS_H
+#define WAREHOUSE_ROS_QUERY_RESULTS_H
 
-#include <boost/format.hpp>
-#include <stdexcept>
-#include <string>
+#include <warehouse_ros/message_with_metadata.h>
+#include <warehouse_ros/exceptions.h>
+#include <boost/iterator/iterator_facade.hpp>
 
-namespace mongo_ros
+namespace warehouse_ros
 {
 
-using boost::format;
-using std::string;
-
-/// A base class for all pose_graph exceptions; provides a handy boost::format parent constructor
-class MongoRosException: public std::runtime_error
+class ResultIteratorHelper
 {
 public:
-  MongoRosException (const format& error_string) : std::runtime_error(error_string.str()) {};
-  MongoRosException (const char* str) : std::runtime_error(str) {};
+  virtual bool next() = 0;
+  virtual bool hasData() const = 0;
+  virtual Metadata::ConstPtr metadata() const = 0;
+  virtual std::string message() const = 0;
+
+  typedef boost::shared_ptr<ResultIteratorHelper> Ptr;
 };
 
-        
-/// \brief Couldn't find matching message in collection
-struct NoMatchingMessageException: public MongoRosException
+template <class M>
+class ResultIterator :
+    public boost::iterator_facade<ResultIterator<M>,
+                                  typename MessageWithMetadata<M>::ConstPtr,
+                                  boost::single_pass_traversal_tag,
+                                  typename MessageWithMetadata<M>::ConstPtr >
 {
-  NoMatchingMessageException (const string& coll) :
-    MongoRosException (format ("Couldn't find message in %1% matching query") % coll) {}
-};      
+public:
+  /// \brief Constructor
+  ResultIterator(ResultIteratorHelper::Ptr results, bool metadata_only);
 
-/// \brief Couldn't find matching message in collection
-struct DbConnectException: public MongoRosException
-{
-  DbConnectException () :
-    MongoRosException ("Couldn't connect to MongoDB instance") {}
-};      
+  /// \brief Copy constructor
+  ResultIterator(const ResultIterator& rhs);
 
-/// \brief Different md5 sum for messages
-struct Md5SumException: public MongoRosException
-{
-  Md5SumException (const string& failure) :
-    MongoRosException (format("The md5 sum for the ROS messages saved in the database differs from that of the compiled message. %1%") % failure) {}
+  /// \brief Constructor for past_the_end iterator
+  ResultIterator();
+
+  /// \brief Destructor
+  ~ResultIterator();
+
+  ResultIterator& operator=(const ResultIterator& other);
+
+private:
+  friend class boost::iterator_core_access;
+
+  // Member functions needed to be an iterator
+  void increment();
+  typename MessageWithMetadata<M>::ConstPtr dereference() const;
+  bool equal(const ResultIterator<M>& other) const;
+
+  ResultIteratorHelper::Ptr results_;
+  const bool metadata_only_;
 };
 
+template <class M>
+struct QueryResults
+{
+  typedef std::pair<ResultIterator<M>, ResultIterator<M> > range_t;
+};
 
 } // namespace
+
+#include "impl/query_results_impl.hpp"
 
 #endif // include guard
