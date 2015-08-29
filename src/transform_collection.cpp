@@ -36,48 +36,29 @@
  * \author Bhaskara Marthi
  */
 
-#include <mongo_ros/transform_collection.h>
+#include <warehouse_ros/transform_collection.h>
 #include <boost/foreach.hpp>
-#include <boost/format.hpp>
 
-namespace mongo_ros
+namespace warehouse_ros
 {
 
-namespace gm=geometry_msgs;
-using std::string;
-using std::vector;
-using boost::format;
-
-
-// We'll look at all transforms between t-history_length and t+INC
-const double INC=1.0;
-  
-mongo::Query TransformCollection::transformQuery (const double t) const
+tf::StampedTransform TransformCollection::lookupTransform(const std::string& target,
+                                                          const std::string& src,
+                                                          const double t) const
 {
-  format query("{stamp : { $gte : %.9f, $lte : %.9f } }");
-  const double start = t-history_length_;
-  const double end = t+INC;
-  string s = (query % start % end).str();
-  mongo::Query q = mongo::fromjson(s);
-  return q;
-}
-
-tf::StampedTransform TransformCollection::lookupTransform (const string& target,
-                                                           const string& src,
-                                                           const double t) const
-{
-  // Form the query
-  const mongo::Query q = transformQuery(t);
+  // Query all transforms between t-search_back_ and t+search_forward_
+  Query::Ptr q = coll_.createQuery();
+  q->appendRangeInclusive("stamp", t-search_back_, t+search_forward_);
 
   // Iterate over the messages and add them to a Transformer
-  tf::Transformer buffer(true, ros::Duration(history_length_+INC*1.1));
-  typedef MessageWithMetadata<tf::tfMessage>::ConstPtr MsgPtr;
-  BOOST_FOREACH (MsgPtr m, coll_.queryResults(q)) 
+  tf::Transformer buffer(true, ros::Duration(search_back_+search_forward_*1.1));
+  typename QueryResults<tf::tfMessage>::range_t res = coll_.query(q);
+  for (ResultIterator<tf::tfMessage> it = res.first; it != res.second; ++it)
   {
-    BOOST_FOREACH (const gm::TransformStamped& trans, m->transforms) 
+    BOOST_FOREACH (const geometry_msgs::TransformStamped& trans, (*it)->transforms) 
     {
-      const gm::Vector3& v = trans.transform.translation;
-      const gm::Quaternion& q = trans.transform.rotation;
+      const geometry_msgs::Vector3& v = trans.transform.translation;
+      const geometry_msgs::Quaternion& q = trans.transform.rotation;
       const std_msgs::Header& h = trans.header;
       const tf::Transform tr(tf::Quaternion(q.x, q.y, q.z, q.w),
                              tf::Vector3(v.x, v.y, v.z));
@@ -94,16 +75,9 @@ tf::StampedTransform TransformCollection::lookupTransform (const string& target,
   return result;
 }
 
-
-tf::StampedTransform LiveTransformSource::lookupTransform (const string& target,
-                                                           const string& src,
-                                                           const double tm) const
+void TransformCollection::putTransform(tf::StampedTransform)
 {
-  ros::Time t(tm);
-  tf_->waitForTransform(target, src, t, ros::Duration(timeout_));
-  tf::StampedTransform trans;
-  tf_->lookupTransform(target, src, t, trans); // Can throw
-  return trans;
+
 }
 
 } // namespace
