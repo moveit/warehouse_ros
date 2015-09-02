@@ -29,8 +29,8 @@
  */
 
 /**
- * \file 
- * 
+ * \file
+ *
  * Implementation of mongo_ros.h
  *
  * \author Bhaskara Marthi
@@ -47,7 +47,7 @@ using std::string;
 
 /// Get a parameter, with default values
 template <class P>
-P getParam (const ros::NodeHandle& nh, const string& name, const P& default_val) 
+P getParam (const ros::NodeHandle& nh, const string& name, const P& default_val)
 {
   P val;
   nh.param(name, val, default_val);
@@ -84,9 +84,9 @@ makeDbConnection (const ros::NodeHandle& nh, const string& host,
 
   const string db_address = (boost::format("%1%:%2%") % db_host % db_port).str();
   boost::shared_ptr<mongo::DBClientConnection> conn;
-  
+
   const ros::WallTime end = ros::WallTime::now() + ros::WallDuration(timeout);
-  
+
   while (ros::ok() && ros::WallTime::now()<end)
   {
     conn.reset(new mongo::DBClientConnection());
@@ -94,6 +94,11 @@ makeDbConnection (const ros::NodeHandle& nh, const string& host,
     {
       ROS_DEBUG_STREAM_NAMED ("init", "Connecting to db at " << db_address);
       conn->connect(db_address);
+
+      std::string err;
+      if (!conn->auth("moveit_robot_states", "test", "test", err))
+        ROS_ERROR_STREAM("Mongo authentication failed " << err);
+
       if (!conn->isFailed())
         break;
     }
