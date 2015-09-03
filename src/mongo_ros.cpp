@@ -111,10 +111,10 @@ string getPwd(ros::NodeHandle nh, const string pwd = "")
 }
 
 boost::shared_ptr<mongo::DBClientConnection>
-makeDbConnection (const ros::NodeHandle& nh, const string& host,
+makeDbConnection (const ros::NodeHandle& nh, const std::string& host,
                   const unsigned& port, const float timeout,
-                  const bool authenticate, const string& name,
-                  const string& user, const string& pwd)
+                  const bool authenticate, const std::string& name,
+                  const std::string& user, const std::string& pwd)
 {
   // The defaults should match the ones used by mongodb/wrapper.py
   const string db_host = getHost(nh, host);
