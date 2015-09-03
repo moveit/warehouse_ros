@@ -74,13 +74,56 @@ int getPort (ros::NodeHandle nh, const int port=0)
   return db_port;
 }
 
+string getName(ros::NodeHandle nh, const string name = "")
+{
+  const string db_name =
+    ("" == name) ?
+    getParam<string>(nh, "warehouse_name", "") :
+    name;
+  return db_name;
+}
+
+string getUser(ros::NodeHandle nh, const string user = "")
+{
+  const string db_user =
+    ("" == user) ?
+    getParam<string>(nh, "warehouse_user", "") :
+    user;
+  return db_user;
+}
+
+bool getAuthenticate(ros::NodeHandle nh, const bool authenticate = false)
+{
+  const bool db_authenticate =
+    (false == authenticate) ?
+    getParam<bool>(nh, "warehouse_authenticate", "") :
+    authenticate;
+  return db_authenticate;
+}
+
+string getPwd(ros::NodeHandle nh, const string pwd = "")
+{
+  const string db_pwd =
+    ("" == pwd) ?
+    getParam<string>(nh, "warehouse_pwd", "") :
+    pwd;
+  return db_pwd;
+}
+
 boost::shared_ptr<mongo::DBClientConnection>
 makeDbConnection (const ros::NodeHandle& nh, const string& host,
-                  const unsigned& port, const float timeout)
+                  const unsigned& port, const float timeout,
+                  const bool authenticate, const string& name,
+                  const string& user, const string& pwd)
 {
   // The defaults should match the ones used by mongodb/wrapper.py
   const string db_host = getHost(nh, host);
   const int db_port = getPort(nh, port);
+
+  const bool db_authenticate = getAuthenticate(nh, authenticate);
+  const string db_name = getName(nh, name);
+  const string db_user = getUser(nh, user);
+  const string db_pwd = getPwd(nh, pwd);
 
   const string db_address = (boost::format("%1%:%2%") % db_host % db_port).str();
   boost::shared_ptr<mongo::DBClientConnection> conn;
@@ -96,7 +139,7 @@ makeDbConnection (const ros::NodeHandle& nh, const string& host,
       conn->connect(db_address);
 
       std::string err;
-      if (!conn->auth("moveit_robot_states", "test", "test", err))
+      if (db_authenticate && !conn->auth(db_name, db_user, db_pwd, err))
         ROS_ERROR_STREAM("Mongo authentication failed " << err);
 
       if (!conn->isFailed())

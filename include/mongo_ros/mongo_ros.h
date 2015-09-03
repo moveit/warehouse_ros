@@ -29,8 +29,8 @@
  */
 
 /**
- * \file 
- * 
+ * \file
+ *
  * Db-level operations.  Most operations are in message_collection.h
  *
  * \author Bhaskara Marthi
@@ -48,8 +48,10 @@ namespace mongo_ros
 
 boost::shared_ptr<mongo::DBClientConnection>
 makeDbConnection (const ros::NodeHandle& nh, const std::string& host="",
-                  const unsigned& port=0, float timeout=300.0);
-  
+                  const unsigned& port=0, float timeout=300.0,
+                  const bool authenticate = false, const std::string& name = "",
+                  const std::string& user = "", const std::string& pwd = "");
+
 
 /// Return the ROS Message type of a given collection
 std::string messageType (mongo::DBClientConnection& conn,
