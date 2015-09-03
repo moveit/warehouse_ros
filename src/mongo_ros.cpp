@@ -120,6 +120,7 @@ makeDbConnection (const ros::NodeHandle& nh, const string& host,
   const string db_host = getHost(nh, host);
   const int db_port = getPort(nh, port);
 
+  // Args for authenticating with remote mongo db; not needed for local connection.
   const bool db_authenticate = getAuthenticate(nh, authenticate);
   const string db_name = getName(nh, name);
   const string db_user = getUser(nh, user);
