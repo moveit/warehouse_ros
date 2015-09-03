@@ -78,7 +78,7 @@ string getName(ros::NodeHandle nh, const string name = "")
 {
   const string db_name =
     ("" == name) ?
-    getParam<string>(nh, "warehouse_name", "") :
+    getParam<string>(nh, "warehouse_database_name", "") :
     name;
   return db_name;
 }
