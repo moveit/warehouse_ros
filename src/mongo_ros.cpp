@@ -113,18 +113,30 @@ string getPwd(ros::NodeHandle nh, const string pwd = "")
 boost::shared_ptr<mongo::DBClientConnection>
 makeDbConnection (const ros::NodeHandle& nh, const std::string& host,
                   const unsigned& port, const float timeout,
-                  const bool authenticate, const std::string& name,
+                  const std::string& name, const bool authenticate,
                   const std::string& user, const std::string& pwd)
 {
   // The defaults should match the ones used by mongodb/wrapper.py
   const string db_host = getHost(nh, host);
   const int db_port = getPort(nh, port);
 
+
   // Args for authenticating with remote mongo db; not needed for local connection.
   const bool db_authenticate = getAuthenticate(nh, authenticate);
   const string db_name = getName(nh, name);
   const string db_user = getUser(nh, user);
   const string db_pwd = getPwd(nh, pwd);
+
+  ROS_INFO("\n\n");
+
+  ROS_INFO_STREAM("Timout " << timeout);
+  ROS_INFO_STREAM("Port " << db_port);
+  ROS_INFO_STREAM("Host " << db_host);
+  ROS_INFO_STREAM("User " << db_user);
+  ROS_INFO_STREAM("Pwd " << db_pwd);
+  ROS_INFO_STREAM("Name " << db_name);
+  ROS_INFO_STREAM("Auth " << db_authenticate);
+
 
   const string db_address = (boost::format("%1%:%2%") % db_host % db_port).str();
   boost::shared_ptr<mongo::DBClientConnection> conn;
@@ -140,11 +152,18 @@ makeDbConnection (const ros::NodeHandle& nh, const std::string& host,
       conn->connect(db_address);
 
       std::string err;
-      if (db_authenticate && !conn->auth(db_name, db_user, db_pwd, err))
-        ROS_ERROR_STREAM("Mongo authentication failed " << err);
+      if (db_authenticate)
+      {
+        ROS_INFO("Authing");
+        if (!conn->auth(db_name, db_user, db_pwd, err))
+          ROS_ERROR_STREAM("Mongo authentication failed " << err);
+      }
 
       if (!conn->isFailed())
+      {
+        ROS_INFO("connected");
         break;
+      }
     }
     catch (mongo::ConnectException& e)
     {
