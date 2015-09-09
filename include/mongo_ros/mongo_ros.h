@@ -29,8 +29,8 @@
  */
 
 /**
- * \file
- *
+ * \file 
+ * 
  * Db-level operations.  Most operations are in message_collection.h
  *
  * \author Bhaskara Marthi
