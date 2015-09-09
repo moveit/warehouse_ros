@@ -29,8 +29,8 @@
  */
 
 /**
- * \file
- *
+ * \file 
+ * 
  * Implementation of template methods of MessageCollection
  * Only to be included by message_collection.h
  *
@@ -68,14 +68,14 @@ MessageCollection<M>::MessageCollection (const string& db,
   initialize(db, coll, db_host, db_port, timeout);
 }
 
+
 template <class M>
 void MessageCollection<M>::initialize (const string& db, const string& coll,
                                        const string& host, const unsigned port,
                                        const float timeout)
 {
-  ROS_WARN_STREAM(db);
   conn_ = makeDbConnection(nh_, host, port, timeout, db);
-
+  
   gfs_.reset(new mongo::GridFS(*conn_, db));
   ROS_DEBUG_NAMED ("create_collection", "Constructed collection");
 
@@ -103,11 +103,11 @@ void MessageCollection<M>::initialize (const string& db, const string& coll,
       md5sum_matches_ = false;
       typedef typename mt::DataType<M> DataType;
       const string datatype = DataType().value();
-      ROS_ERROR("The md5 sum for message %s changed to %s. Only reading metadata.",
+      ROS_ERROR("The md5 sum for message %s changed to %s. Only reading metadata.", 
                 datatype.c_str(), md5.c_str());
     }
   }
-
+  
   if (insertion_pub_.getNumSubscribers()==0)
   {
     ros::WallDuration d(0.1);
@@ -132,12 +132,12 @@ void MessageCollection<M>::insert
 {
   if (!md5sum_matches_)
     throw Md5SumException("Cannot insert additional elements.");
-
+  
   /// Get the BSON and id from the metadata
   const mongo::BSONObj bson = metadata;
   mongo::OID id;
   bson["_id"].Val(id);
-
+  
   /// Serialize the message into a buffer
   const size_t serial_size = ser::serializationLength(msg);
   boost::shared_array<uint8_t> buffer(new uint8_t[serial_size]);
@@ -156,7 +156,7 @@ void MessageCollection<M>::insert
   builder.append("blob_id", blob_id);
   mongo::BSONObj entry = builder.obj();
   conn_->insert(ns_, entry);
-
+  
 
   // Publish ROS notification
   std_msgs::String notification;
@@ -173,11 +173,11 @@ MessageCollection<M>::queryResults (const mongo::Query& query,
 {
   if (!md5sum_matches_ && !metadata_only)
     throw Md5SumException("Can only query metadata.");
-
+  
   mongo::Query copy(query.obj);
   ROS_DEBUG_NAMED("query", "Sending query %s to %s", copy.toString().c_str(),
                   ns_.c_str());
-
+                  
   if (sort_by.size() > 0)
     copy.sort(sort_by, ascending ? 1 : -1);
   return typename QueryResults<M>::range_t
@@ -192,7 +192,7 @@ MessageCollection<M>::pullAllResults (const mongo::Query& query,
                                       const bool metadata_only,
                                       const string& sort_by,
                                       const bool ascending) const
-{
+{  
   typename QueryResults<M>::range_t res = queryResults(query, metadata_only,
                                                        sort_by, ascending);
   return vector<typename MessageWithMetadata<M>::ConstPtr>
@@ -235,15 +235,15 @@ template <class M>
 void MessageCollection<M>::modifyMetadata (const Query& q, const Metadata& m)
 {
   typename MessageWithMetadata<M>::ConstPtr orig = findOne(q, true);
-
+  
   mongo::BSONObjBuilder new_meta_builder;
 
   std::set<std::string> fields;
   m.getFieldNames(fields);
 
-  BOOST_FOREACH (const string& f, fields)
+  BOOST_FOREACH (const string& f, fields) 
   {
-    if ((f!="_id") && (f!="creation_time"))
+    if ((f!="_id") && (f!="creation_time")) 
       new_meta_builder.append(BSON("$set" << BSON(f << m.getField(f))).\
                               getField("$set"));
   }
