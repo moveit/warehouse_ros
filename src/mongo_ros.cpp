@@ -29,8 +29,8 @@
  */
 
 /**
- * \file
- *
+ * \file 
+ * 
  * Implementation of mongo_ros.h
  *
  * \author Bhaskara Marthi
@@ -47,7 +47,7 @@ using std::string;
 
 /// Get a parameter, with default values
 template <class P>
-P getParam (const ros::NodeHandle& nh, const string& name, const P& default_val)
+P getParam (const ros::NodeHandle& nh, const string& name, const P& default_val) 
 {
   P val;
   nh.param(name, val, default_val);
@@ -120,29 +120,17 @@ makeDbConnection (const ros::NodeHandle& nh, const std::string& host,
   const string db_host = getHost(nh, host);
   const int db_port = getPort(nh, port);
 
-
   // Args for authenticating with remote mongo db; not needed for local connection.
   const bool db_authenticate = getAuthenticate(nh, authenticate);
   const string db_name = getName(nh, name);
   const string db_user = getUser(nh, user);
   const string db_pwd = getPwd(nh, pwd);
 
-  ROS_INFO("\n\n");
-
-  ROS_INFO_STREAM("Timout " << timeout);
-  ROS_INFO_STREAM("Port " << db_port);
-  ROS_INFO_STREAM("Host " << db_host);
-  ROS_INFO_STREAM("User " << db_user);
-  ROS_INFO_STREAM("Pwd " << db_pwd);
-  ROS_INFO_STREAM("Name " << db_name);
-  ROS_INFO_STREAM("Auth " << db_authenticate);
-
-
   const string db_address = (boost::format("%1%:%2%") % db_host % db_port).str();
   boost::shared_ptr<mongo::DBClientConnection> conn;
-
+  
   const ros::WallTime end = ros::WallTime::now() + ros::WallDuration(timeout);
-
+  
   while (ros::ok() && ros::WallTime::now()<end)
   {
     conn.reset(new mongo::DBClientConnection());
@@ -150,26 +138,19 @@ makeDbConnection (const ros::NodeHandle& nh, const std::string& host,
     {
       ROS_DEBUG_STREAM_NAMED ("init", "Connecting to db at " << db_address);
       conn->connect(db_address);
-
-      std::string err;
-      if (db_authenticate)
-      {
-        ROS_INFO("Authing");
-        if (!conn->auth(db_name, db_user, db_pwd, err))
-          ROS_ERROR_STREAM("Mongo authentication failed " << err);
-      }
-
       if (!conn->isFailed())
-      {
-        ROS_INFO("connected");
         break;
-      }
     }
     catch (mongo::ConnectException& e)
     {
       ros::Duration(1.0).sleep();
     }
   }
+
+  std::string err;
+  if (db_authenticate && (!conn->auth(db_name, db_user, db_pwd, err)))
+      ROS_ERROR_STREAM("Mongo authentication failed: " << err);
+
   if (conn->isFailed() || ros::WallTime::now()>end)
     throw DbConnectException();
 
