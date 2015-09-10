@@ -96,7 +96,7 @@ bool getAuthenticate(ros::NodeHandle nh, const bool authenticate = false)
 {
   const bool db_authenticate =
     (false == authenticate) ?
-    getParam<bool>(nh, "warehouse_authenticate", "") :
+    getParam<bool>(nh, "warehouse_authenticate", false) :
     authenticate;
   return db_authenticate;
 }
