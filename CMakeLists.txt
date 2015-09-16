@@ -5,6 +5,7 @@ set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/" ${CMAKE_MODULE_PATH})
 
 find_package(catkin REQUIRED
   geometry_msgs
+  rospy
   roscpp
   rostest
   rostime
@@ -43,7 +44,7 @@ set(warehouse_srcs
   src/mongo_ros.cpp
   src/mongo_ros_dummy.cpp)
 
-add_library(warehouse_ros SHARED ${warehouse_srcs})
+add_library(warehouse_ros ${warehouse_srcs})
 
 target_link_libraries(warehouse_ros ${catkin_LIBRARIES} ${MongoDB_LIBRARIES} ${OPENSSL_LIBRARIES} ${Boost_LIBRARIES})
 catkin_add_gtest(test_mongo_roscpp test/test_mongo_ros.cpp)
