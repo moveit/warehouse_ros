@@ -51,8 +51,6 @@ else(WIN32)
     )
 endif(WIN32)
 
-set(MongoDB_LIBRARIES)
-
 if(MongoDB_INCLUDE_DIR AND MongoDB_LIBRARIES)
   set(MongoDB_FOUND TRUE)
   message(STATUS "Found MongoDB: ${MongoDB_INCLUDE_DIR}, ${MongoDB_LIBRARIES}")
