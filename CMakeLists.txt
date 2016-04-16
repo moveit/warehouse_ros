@@ -6,9 +6,11 @@ set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/" ${CMAKE_MODULE_PATH})
 find_package(catkin REQUIRED
   geometry_msgs
   roscpp
-  rostest
   rostime
   std_msgs)
+if (CATKIN_ENABLE_TESTING)
+  find_package(catkin REQUIRED COMPONENTS rostest)
+endif()
 find_package(Boost COMPONENTS system filesystem thread)
 find_package(OpenSSL)
 find_package(MongoDB)
@@ -47,7 +49,10 @@ add_library(warehouse_ros SHARED ${warehouse_srcs})
 
 target_link_libraries(warehouse_ros ${catkin_LIBRARIES} ${MongoDB_LIBRARIES} ${OPENSSL_LIBRARIES} ${Boost_LIBRARIES})
 catkin_add_gtest(test_mongo_roscpp test/test_mongo_ros.cpp)
-target_link_libraries(test_mongo_roscpp warehouse_ros)
+target_link_libraries(test_mongo_roscpp warehouse_ros ${catkin_LIBRARIES})
+if (CATKIN_ENABLE_TESTING)
+  add_rostest(test/mongo_ros.test)
+endif()
 
 install(TARGETS warehouse_ros LIBRARY DESTINATION lib)
 install(DIRECTORY include/ DESTINATION include FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp")
