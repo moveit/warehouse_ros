@@ -12,7 +12,8 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
-  <build_depend>rospy</build_depend>
+  <test_depend>rosunit</test_depend>
+
   <build_depend>roscpp</build_depend>
   <build_depend>geometry_msgs</build_depend>
   <build_depend>rostime</build_depend>
