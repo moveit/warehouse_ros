@@ -11,7 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
 if (CATKIN_ENABLE_TESTING)
   find_package(rostest REQUIRED)
 endif()
-find_package(Boost COMPONENTS system filesystem)
+find_package(Boost REQUIRED COMPONENTS system)
 find_package(OpenSSL)
 find_package(MongoDB)
 
@@ -26,7 +26,7 @@ catkin_python_setup()
 
 catkin_package(
   INCLUDE_DIRS ${CATKIN_DEVEL_PREFIX}/include include test
-  LIBRARIES warehouse_ros
+#  LIBRARIES warehouse_ros
   CATKIN_DEPENDS roscpp geometry_msgs rostime std_msgs
   DEPENDS Boost ${MONGO_EXPORT}
   )
