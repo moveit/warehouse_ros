@@ -25,7 +25,7 @@ file(MAKE_DIRECTORY "${CATKIN_DEVEL_PREFIX}/include")
 catkin_python_setup()
 
 catkin_package(
-  INCLUDE_DIRS ${CATKIN_DEVEL_PREFIX}/include include
+  INCLUDE_DIRS ${CATKIN_DEVEL_PREFIX}/include include test
   LIBRARIES warehouse_ros
   CATKIN_DEPENDS roscpp geometry_msgs rostime std_msgs
   DEPENDS Boost ${MONGO_EXPORT}
@@ -37,7 +37,7 @@ if (NOT MongoDB_EXPOSE_MACROS)
 endif()
 configure_file("include/mongo_ros/config.h.in" "${CATKIN_DEVEL_PREFIX}/include/mongo_ros/config.h")
 
-include_directories(${CATKIN_DEVEL_PREFIX}/include include ${catkin_INCLUDE_DIRS} ${MongoDB_INCLUDE_DIR} ${Boost_INCLUDE_DIRS})
+include_directories(${CATKIN_DEVEL_PREFIX}/include include test ${catkin_INCLUDE_DIRS} ${MongoDB_INCLUDE_DIR} ${Boost_INCLUDE_DIRS})
 link_directories(${catkin_LINK_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
 
