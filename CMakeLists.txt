@@ -46,11 +46,11 @@ set(warehouse_srcs
   src/mongo_ros_dummy.cpp)
 
 add_library(warehouse_ros SHARED ${warehouse_srcs})
-
 target_link_libraries(warehouse_ros ${catkin_LIBRARIES} ${MongoDB_LIBRARIES} ${OPENSSL_LIBRARIES} ${Boost_LIBRARIES})
-catkin_add_gtest(test_mongo_roscpp test/test_mongo_ros.cpp)
-target_link_libraries(test_mongo_roscpp warehouse_ros ${catkin_LIBRARIES})
+
 if (CATKIN_ENABLE_TESTING)
+  catkin_add_gtest(test_mongo_roscpp test/test_mongo_ros.cpp)
+  target_link_libraries(test_mongo_roscpp warehouse_ros)
   add_rostest(test/mongo_ros.test)
 endif()
 
