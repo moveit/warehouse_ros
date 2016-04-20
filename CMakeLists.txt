@@ -9,7 +9,7 @@ find_package(catkin REQUIRED COMPONENTS
   rostime
   std_msgs)
 if (CATKIN_ENABLE_TESTING)
-  find_package(catkin REQUIRED COMPONENTS rostest)
+  find_package(rostest REQUIRED)
 endif()
 find_package(Boost COMPONENTS system filesystem thread)
 find_package(OpenSSL)
@@ -49,8 +49,9 @@ add_library(warehouse_ros SHARED ${warehouse_srcs})
 target_link_libraries(warehouse_ros ${catkin_LIBRARIES} ${MongoDB_LIBRARIES} ${OPENSSL_LIBRARIES} ${Boost_LIBRARIES})
 
 if (CATKIN_ENABLE_TESTING)
-  catkin_add_gtest(test_mongo_roscpp test/test_mongo_ros.cpp)
-  target_link_libraries(test_mongo_roscpp warehouse_ros)
+#  catkin_add_gtest(test_mongo_roscpp test/test_mongo_ros.cpp)
+  add_executable(test_mongo_roscpp test/test_mongo_ros.cpp)
+  target_link_libraries(test_mongo_roscpp ${catkin_LIBRARIES} ${Boost_LIBRARIES} ${MongoDB_LIBRARIES})
   add_rostest(test/mongo_ros.test)
 endif()
 
