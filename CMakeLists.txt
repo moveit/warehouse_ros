@@ -11,7 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
 if (CATKIN_ENABLE_TESTING)
   find_package(rostest REQUIRED)
 endif()
-find_package(Boost COMPONENTS system filesystem thread)
+find_package(Boost COMPONENTS system filesystem)
 find_package(OpenSSL)
 find_package(MongoDB)
 
