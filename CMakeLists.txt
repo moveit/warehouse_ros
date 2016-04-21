@@ -31,6 +31,7 @@ catkin_package(
   DEPENDS Boost ${MONGO_EXPORT}
   )
 
+include(cmake/FindMongoDB.cmake)
 
 if (NOT MongoDB_EXPOSE_MACROS)
   add_definitions(-DMONGO_EXPOSE_MACROS)
