@@ -5,18 +5,18 @@ compiler:
   - gcc
 notifications:
   email:
-    on_success: always
-    on_failure: always
     recipients:
       - gm130s@gmail.com
 env:
   matrix:
+    - ROS_DISTRO="kinetic"
     - ROS_DISTRO="jade"   ROS_REPOSITORY_PATH=http://packages.ros.org/ros/ubuntu  USE_DEB=true
     - ROS_DISTRO="jade"   ROS_REPOSITORY_PATH=http://packages.ros.org/ros-shadow-fixed/ubuntu  USE_DEB=true
     - ROS_DISTRO="indigo" ROS_REPOSITORY_PATH=http://packages.ros.org/ros/ubuntu  USE_DEB=true
     - ROS_DISTRO="indigo" ROS_REPOSITORY_PATH=http://packages.ros.org/ros-shadow-fixed/ubuntu  USE_DEB=true
 matrix:
   allow_failures:
+    - env: ROS_DISTRO="kinetic"
     - env: ROS_DISTRO="indigo" ROS_REPOSITORY_PATH=http://packages.ros.org/ros/ubuntu  USE_DEB=true
     - env: ROS_DISTRO="indigo" ROS_REPOSITORY_PATH=http://packages.ros.org/ros-shadow-fixed/ubuntu  USE_DEB=true
 install:
