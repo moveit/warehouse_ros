@@ -48,7 +48,7 @@ class DatabaseConnection
 {
 public:
   /// \brief Set database connection params.
-  virtual bool setParams(const std::string& host, unsigned port, float timeout=60.0) = 0;
+  virtual bool setParams(const std::string& host, unsigned port, float timeout = 60.0) = 0;
 
   /// \brief Set database connection params.
   virtual bool setTimeout(float timeout) = 0;
@@ -69,13 +69,14 @@ public:
 
   /// \brief Open a collection on the DB.  The collection is created if it doesn't exist.
   /// A DbClientConnection exception will be thrown if the database is not connected.
-  template <class M>
-  MessageCollection<M> openCollection(const std::string& db_name, const std::string& collection_name);
+  template<class M>
+    MessageCollection<M> openCollection(const std::string& db_name, const std::string& collection_name);
 
   /// \brief Open a collection on the DB.  The collection is created if it doesn't exist.
   /// A DbClientConnection exception will be thrown if the database is not connected.
-  template <class M>
-  typename MessageCollection<M>::Ptr openCollectionPtr(const std::string& db_name, const std::string& collection_name);
+  template<class M>
+    typename MessageCollection<M>::Ptr openCollectionPtr(const std::string& db_name,
+                                                         const std::string& collection_name);
 
   typedef boost::shared_ptr<DatabaseConnection> Ptr;
 protected:

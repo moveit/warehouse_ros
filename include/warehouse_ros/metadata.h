@@ -56,7 +56,9 @@ public:
   typedef boost::shared_ptr<Query> Ptr;
   typedef boost::shared_ptr<const Query> ConstPtr;
 
-  virtual ~Query() {}
+  virtual ~Query()
+  {
+  }
   virtual void append(const std::string& name, const std::string& val) = 0;
   virtual void append(const std::string& name, const double val) = 0;
   virtual void append(const std::string& name, const int val) = 0;
@@ -85,7 +87,9 @@ public:
   typedef boost::shared_ptr<Metadata> Ptr;
   typedef boost::shared_ptr<const Metadata> ConstPtr;
 
-  virtual ~Metadata() {}
+  virtual ~Metadata()
+  {
+  }
   virtual void append(const std::string& name, const std::string& val) = 0;
   virtual void append(const std::string& name, const double val) = 0;
   virtual void append(const std::string& name, const int val) = 0;
