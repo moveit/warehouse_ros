@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008, Willow Garage, Inc.
+ * Copyright (c) 2015, Fetch Robotics
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,55 +31,31 @@
 /**
  * \file 
  * 
- * Exceptions thrown by mongo_ros
+ * Implementation of template methods of DatabaseConnection
+ * Only to be included by database_connection.h
  *
- * \author Bhaskara Marthi
+ * \author Connor Brew
  */
 
-#ifndef MONGO_ROS_EXCEPTIONS_H
-#define MONGO_ROS_EXCEPTIONS_H
-
-#include <boost/format.hpp>
-#include <stdexcept>
-#include <string>
-
-namespace mongo_ros
+namespace warehouse_ros
 {
 
-using boost::format;
-using std::string;
+template<class M>
+  MessageCollection<M> DatabaseConnection::openCollection(const std::string& db_name,
+                                                          const std::string& collection_name)
+  {
+    if (!isConnected())
+      throw DbConnectException("Cannot open collection.");
+    return MessageCollection<M>(openCollectionHelper(db_name, collection_name));
+  }
 
-/// A base class for all pose_graph exceptions; provides a handy boost::format parent constructor
-class MongoRosException: public std::runtime_error
-{
-public:
-  MongoRosException (const format& error_string) : std::runtime_error(error_string.str()) {};
-  MongoRosException (const char* str) : std::runtime_error(str) {};
-};
-
-        
-/// \brief Couldn't find matching message in collection
-struct NoMatchingMessageException: public MongoRosException
-{
-  NoMatchingMessageException (const string& coll) :
-    MongoRosException (format ("Couldn't find message in %1% matching query") % coll) {}
-};      
-
-/// \brief Couldn't find matching message in collection
-struct DbConnectException: public MongoRosException
-{
-  DbConnectException () :
-    MongoRosException ("Couldn't connect to MongoDB instance") {}
-};      
-
-/// \brief Different md5 sum for messages
-struct Md5SumException: public MongoRosException
-{
-  Md5SumException (const string& failure) :
-    MongoRosException (format("The md5 sum for the ROS messages saved in the database differs from that of the compiled message. %1%") % failure) {}
-};
-
+template<class M>
+  typename MessageCollection<M>::Ptr DatabaseConnection::openCollectionPtr(const std::string& db_name,
+                                                                           const std::string& collection_name)
+  {
+    if (!isConnected())
+      throw DbConnectException("Cannot open collection.");
+    return typename MessageCollection<M>::Ptr(new MessageCollection<M>(openCollectionHelper(db_name, collection_name)));
+  }
 
 } // namespace
-
-#endif // include guard

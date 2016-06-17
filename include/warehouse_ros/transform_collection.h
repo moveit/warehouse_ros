@@ -36,14 +36,14 @@
  * \author Bhaskara Marthi
  */
 
-#ifndef MONGO_ROS_TF_COLLECTION_H
-#define MONGO_ROS_TF_COLLECTION_H
+#ifndef WAREHOUSE_ROS_TF_COLLECTION_H
+#define WAREHOUSE_ROS_TF_COLLECTION_H
 
-#include <mongo_ros/message_collection.h>
+#include <warehouse_ros/message_collection.h>
 #include <tf/transform_listener.h>
 #include <tf/tfMessage.h>
 
-namespace mongo_ros
+namespace warehouse_ros
 {
 
 /// This abstract base class just makes it easier to write code that works for
@@ -51,12 +51,10 @@ namespace mongo_ros
 class TransformSource
 {
 public:
-
   /// Get the transform between two frames at a given timepoint.  Can throw
   /// all the usual tf exceptions if the transform is unavailable.
-  virtual tf::StampedTransform lookupTransform (const std::string& target_frame,
-                                                const std::string& source_frame,
-                                                double t) const = 0;
+  virtual tf::StampedTransform lookupTransform(const std::string& target_frame, const std::string& source_frame,
+                                               double t) const = 0;
 };
 
 /// The setup is that you have a db containing a collection with tf messages,
@@ -69,56 +67,51 @@ public:
 class TransformCollection : public TransformSource
 {
 public:
-  TransformCollection (const std::string& db,
-                       const std::string& coll="tf",
-                       const std::string& host="localhost",
-                       const unsigned port=27017,
-                       const double history_length=10.0) :
-    TransformSource(),
-    coll_(db, coll, host, port), history_length_(history_length)
-  {}
+  TransformCollection(MessageCollection<tf::tfMessage> &coll, const double search_back = 10.0,
+                      const double search_forward = 1.0) :
+      TransformSource(), coll_(coll), search_back_(search_back), search_forward_(search_forward)
+  {
+  }
 
   /// Get the transform between two frames at a given timepoint.  Can throw
   /// all the exceptions tf::lookupTransform can.
-  virtual
-  tf::StampedTransform lookupTransform (const std::string& target_frame,
-                                        const std::string& source_frame,
-                                        double t) const;
-    
+  virtual tf::StampedTransform lookupTransform(const std::string& target_frame, const std::string& source_frame,
+                                               double t) const;
+
+  /// Put the transform into the collection.
+  void putTransform(tf::StampedTransform);
 
 private:
-  
-  /// Return a query that returns transforms relevant to query at time t
-  mongo::Query transformQuery (double t) const;
-
   MessageCollection<tf::tfMessage> coll_;
-  double history_length_;
-
+  double search_back_;
+  double search_forward_;
 };
-
 
 /// This wraps a tf transform listener so it can be used interchangeably
 /// with a TransformCollection.  
 class LiveTransformSource : public TransformSource
 {
 public:
-  
   /// \param timeout: Maximum timeout
   ///
   /// ros::init must be called before creating an instance
-  LiveTransformSource (double timeout = 0) :
-    TransformSource(), tf_(new tf::TransformListener()), timeout_(timeout)
-  {}
-  
+  LiveTransformSource(double timeout = 0) :
+      TransformSource(), tf_(new tf::TransformListener()), timeout_(timeout)
+  {
+  }
+
   /// Will return the transform if it becomes available before the timeout 
   /// expires, else throw a tf exception
-  virtual
-  tf::StampedTransform lookupTransform (const std::string& target,
-                                        const std::string& source,
-                                        double t) const;
-  
-private:
+  virtual tf::StampedTransform lookupTransform(const std::string& target, const std::string& source, double t) const
+  {
+    ros::Time tm(t);
+    tf_->waitForTransform(target, source, tm, ros::Duration(timeout_));
+    tf::StampedTransform trans;
+    tf_->lookupTransform(target, source, tm, trans); // Can throw
+    return trans;
+  }
 
+private:
   ros::NodeHandle nh_;
   boost::shared_ptr<tf::TransformListener> tf_;
   ros::Duration timeout_;

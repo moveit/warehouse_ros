@@ -36,65 +36,63 @@
  * \author Bhaskara Marthi
  */
 
-#ifndef MONGO_ROS_QUERY_RESULTS_H
-#define MONGO_ROS_QUERY_RESULTS_H
+#ifndef WAREHOUSE_ROS_QUERY_RESULTS_H
+#define WAREHOUSE_ROS_QUERY_RESULTS_H
 
-#include <mongo_ros/message_with_metadata.h>
-#include <boost/optional.hpp>
+#include <warehouse_ros/message_with_metadata.h>
+#include <warehouse_ros/exceptions.h>
+#include <boost/iterator/iterator_facade.hpp>
 
-namespace mongo_ros
+namespace warehouse_ros
 {
 
-// To avoid some const-correctness issues we wrap Mongo's returned auto_ptr in
-// another pointer
-typedef std::auto_ptr<mongo::DBClientCursor> Cursor;
-typedef boost::shared_ptr<Cursor> CursorPtr;
-
-template <class M>
-class ResultIterator :
-    public boost::iterator_facade<ResultIterator<M>,
-                                  typename MessageWithMetadata<M>::ConstPtr,
-                                  boost::single_pass_traversal_tag,
-                                  typename MessageWithMetadata<M>::ConstPtr >
+class ResultIteratorHelper
 {
 public:
+  virtual bool next() = 0;
+  virtual bool hasData() const = 0;
+  virtual Metadata::ConstPtr metadata() const = 0;
+  virtual std::string message() const = 0;
 
-  /// \brief Constructor
-  ResultIterator (boost::shared_ptr<mongo::DBClientConnection> conn,
-                  const std::string& ns,
-                  const mongo::Query& query,
-                  boost::shared_ptr<mongo::GridFS> gfs,
-                  bool metadata_only);
-
-  /// \brief Copy constructor
-  ResultIterator (const ResultIterator& rhs);
-
-  /// \brief Constructor for past_the_end iterator
-  ResultIterator ();
-
-private:
-
-  friend class boost::iterator_core_access;
-
-  // Member functions needed to be an iterator
-  void increment ();
-  typename MessageWithMetadata<M>::ConstPtr dereference () const;
-  bool equal (const ResultIterator<M>& other) const;
-
-  const bool metadata_only_;
-  CursorPtr cursor_;
-  boost::optional<mongo::BSONObj> next_;
-  boost::shared_ptr<mongo::GridFS> gfs_;
+  typedef boost::shared_ptr<ResultIteratorHelper> Ptr;
 };
 
-/// A templated typedef for convenience
-template <class M>
-struct QueryResults
-{
-  typedef std::pair<ResultIterator<M>, ResultIterator<M> > range_t;
-};
+template<class M>
+  class ResultIterator : public boost::iterator_facade<ResultIterator<M>, typename MessageWithMetadata<M>::ConstPtr,
+      boost::single_pass_traversal_tag, typename MessageWithMetadata<M>::ConstPtr>
+  {
+  public:
+    /// \brief Constructor
+    ResultIterator(ResultIteratorHelper::Ptr results, bool metadata_only);
 
+    /// \brief Copy constructor
+    ResultIterator(const ResultIterator& rhs);
 
+    /// \brief Constructor for past_the_end iterator
+    ResultIterator();
+
+    /// \brief Destructor
+    ~ResultIterator();
+
+    ResultIterator& operator=(const ResultIterator& other);
+
+  private:
+    friend class boost::iterator_core_access;
+
+    // Member functions needed to be an iterator
+    void increment();
+    typename MessageWithMetadata<M>::ConstPtr dereference() const;
+    bool equal(const ResultIterator<M>& other) const;
+
+    ResultIteratorHelper::Ptr results_;
+    const bool metadata_only_;
+  };
+
+template<class M>
+  struct QueryResults
+  {
+    typedef std::pair<ResultIterator<M>, ResultIterator<M> > range_t;
+  };
 
 } // namespace
 

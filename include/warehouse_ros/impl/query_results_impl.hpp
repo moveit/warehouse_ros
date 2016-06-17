@@ -31,50 +31,78 @@
 /**
  * \file 
  * 
- * Implements TransformCollection class
+ * Template implementation for ResultIterator.
+ * Only to be included from query_results.h
  *
  * \author Bhaskara Marthi
  */
 
-#include <warehouse_ros/transform_collection.h>
-#include <boost/foreach.hpp>
-
 namespace warehouse_ros
 {
 
-tf::StampedTransform TransformCollection::lookupTransform(const std::string& target, const std::string& src,
-                                                          const double t) const
-{
-  // Query all transforms between t-search_back_ and t+search_forward_
-  Query::Ptr q = coll_.createQuery();
-  q->appendRangeInclusive("stamp", t - search_back_, t + search_forward_);
-
-  // Iterate over the messages and add them to a Transformer
-  tf::Transformer buffer(true, ros::Duration(search_back_ + search_forward_ * 1.1));
-  typename QueryResults<tf::tfMessage>::range_t res = coll_.query(q);
-  for (ResultIterator<tf::tfMessage> it = res.first; it != res.second; ++it)
+template<class M>
+  ResultIterator<M>::ResultIterator(ResultIteratorHelper::Ptr results, bool metadata_only) :
+      results_(results), metadata_only_(metadata_only)
   {
-    BOOST_FOREACH (const geometry_msgs::TransformStamped& trans, (*it)->transforms)
+    if (!results_->hasData())
+      results_.reset();
+  }
+
+template<class M>
+  ResultIterator<M>::ResultIterator(const ResultIterator<M>& other) :
+      results_(other.results_), metadata_only_(other.metadata_only_)
+  {
+  }
+
+template<class M>
+  ResultIterator<M>::ResultIterator() :
+      metadata_only_(false)
+  {
+  }
+
+template<class M>
+  ResultIterator<M>::~ResultIterator()
+  {
+  }
+
+template<class M>
+  ResultIterator<M>& ResultIterator<M>::operator=(const ResultIterator& other)
+  {
+    results_ = other.results_;
+    metadata_only_ = other.metadata_only_;
+    return *this;
+  }
+
+template<class M>
+  void ResultIterator<M>::increment()
+  {
+    if (!results_->next())
     {
-      const geometry_msgs::Vector3& v = trans.transform.translation;
-      const geometry_msgs::Quaternion& q = trans.transform.rotation;
-      const std_msgs::Header& h = trans.header;
-      const tf::Transform tr(tf::Quaternion(q.x, q.y, q.z, q.w), tf::Vector3(v.x, v.y, v.z));
-      const tf::StampedTransform t(tr, h.stamp, h.frame_id, trans.child_frame_id);
-      const bool ok = buffer.setTransform(t);
-      ROS_ASSERT_MSG(ok, "Tf setTransform returned false for transform from %s "
-                     "to %s at %.4f",
-                     trans.child_frame_id.c_str(), h.frame_id.c_str(), h.stamp.toSec());
+      results_.reset();
     }
   }
-  tf::StampedTransform result;
-  buffer.lookupTransform(target, src, ros::Time(t), result); // Can throw
-  return result;
-}
 
-void TransformCollection::putTransform(tf::StampedTransform)
-{
+template<class M>
+  typename MessageWithMetadata<M>::ConstPtr ResultIterator<M>::dereference() const
+  {
+    ROS_ASSERT(results_);
 
-}
+    typename MessageWithMetadata<M>::Ptr msg(new MessageWithMetadata<M>(results_->metadata()));
+    if (!metadata_only_)
+    {
+      std::string str = results_->message();
+      uint8_t* buf = (uint8_t*)str.c_str();
+      ros::serialization::IStream istream(buf, str.size());
+      ros::serialization::Serializer<M>::read(istream, *msg);
+    }
+    return msg;
+  }
+
+template<class M>
+  bool ResultIterator<M>::equal(const ResultIterator<M>& other) const
+  {
+    // Incomplete, the only case we care about is whether iter is at the end
+    return (!results_ && !other.results_);
+  }
 
 } // namespace

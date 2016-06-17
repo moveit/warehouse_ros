@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, Willow Garage, Inc.
+ * Copyright (c) 2008, Willow Garage, Inc.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,24 +31,69 @@
 /**
  * \file 
  * 
- * Mongo has different magic on how it deals with macros starting with Ubuntu Raring
- * so we need to be careful on how we include the headers we need
+ * Exceptions thrown by warehouse_ros
  *
- * \author Ioan Sucan
+ * \author Bhaskara Marthi
  */
 
-#ifndef MONGO_ROS_CONFIG_H
-#define MONGO_ROS_CONFIG_H
+#ifndef WAREHOUSE_ROS_EXCEPTIONS_H
+#define WAREHOUSE_ROS_EXCEPTIONS_H
 
-#cmakedefine01 MongoDB_EXPOSE_MACROS
+#include <boost/format.hpp>
+#include <stdexcept>
+#include <string>
 
-#if MongoDB_EXPOSE_MACROS
-#  define MONGO_EXPOSE_MACROS
-#  include <mongo/client/gridfs.h>
-#  include <mongo/client/undef_macros.h>
-#  undef MONGO_EXPOSE_MACROS
-#else
-#  include <mongo/client/gridfs.h>
-#endif
+namespace warehouse_ros
+{
 
-#endif
+using boost::format;
+
+/// A base class for all warehouse_ros exceptions; provides a handy boost::format parent constructor
+class WarehouseRosException : public std::runtime_error
+{
+public:
+  WarehouseRosException(const format& error_string) :
+      std::runtime_error(error_string.str())
+  {
+  }
+  ;
+  WarehouseRosException(const char* str) :
+      std::runtime_error(str)
+  {
+  }
+  ;
+};
+
+/// \brief Couldn't find matching message in collection
+struct NoMatchingMessageException : public WarehouseRosException
+{
+  NoMatchingMessageException(const std::string& coll) :
+      WarehouseRosException(format("Couldn't find message in %1% matching query") % coll)
+  {
+  }
+};
+
+/// \brief Couldn't connect to database
+struct DbConnectException : public WarehouseRosException
+{
+  DbConnectException(const std::string& failure) :
+      WarehouseRosException(format("Not connected to the database. %1%") % failure)
+  {
+  }
+};
+
+/// \brief Different md5 sum for messages
+struct Md5SumException : public WarehouseRosException
+{
+  Md5SumException(const std::string& failure) :
+      WarehouseRosException(
+          format(
+              "The md5 sum for the ROS messages saved in the database differs from that of the compiled message. %1%")
+              % failure)
+  {
+  }
+};
+
+} // namespace
+
+#endif // include guard
