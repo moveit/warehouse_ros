@@ -37,6 +37,7 @@
 #ifndef WAREHOUSE_ROS_DATABASE_LOADER_
 #define WAREHOUSE_ROS_LOADER_
 
+#include <boost/scoped_ptr.hpp>
 #include <warehouse_ros/database_connection.h>
 #include <pluginlib/class_loader.h>
 
