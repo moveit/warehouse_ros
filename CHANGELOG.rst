@@ -2,8 +2,8 @@
 Changelog for package warehouse_ros
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.9.0 (2016-06-20)
+------------------
 * [fix] Omit dependency on mongo (and replace with pluginlib) `#32 <https://github.com/ros-planning/warehouse_ros/issues/22>`_
 * [fix] Specifically including a header that seems to be required from Ubuntu Xenial.
 * [sys] Ensure headers and libraries are present for downstream pkgs `#17 <https://github.com/ros-planning/warehouse_ros/issues/17>`_
