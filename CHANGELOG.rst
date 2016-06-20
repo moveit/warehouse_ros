@@ -2,6 +2,15 @@
 Changelog for package warehouse_ros
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* [fix] Omit dependency on mongo (and replace with pluginlib) `#32 <https://github.com/ros-planning/warehouse_ros/issues/22>`_
+* [fix] Specifically including a header that seems to be required from Ubuntu Xenial.
+* [sys] Ensure headers and libraries are present for downstream pkgs `#17 <https://github.com/ros-planning/warehouse_ros/issues/17>`_
+* [sys] Update CI config to test Jade and Kinetic `#30 <https://github.com/ros-planning/warehouse_ros/issues/30>`_
+* [sys] Add rostest file and configs.
+* Contributors: Connor Brew, Dave Coleman, Ioan A Sucan, Isaac I.Y. Saito, Michael Ferguson, Scott K Logan
+
 0.8.8 (2014-10-01)
 ------------------
 * Merge pull request `#13 <https://github.com/ros-planning/warehouse_ros/issues/13>`_ from corot/master
