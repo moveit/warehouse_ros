@@ -39,7 +39,7 @@
 
 #include <boost/scoped_ptr.hpp>
 #include <warehouse_ros/database_connection.h>
-#include <pluginlib/class_loader.h>
+#include <pluginlib/class_loader.hpp>
 
 namespace warehouse_ros
 {
