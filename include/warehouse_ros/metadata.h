@@ -29,8 +29,8 @@
  */
 
 /**
- * \file 
- * 
+ * \file
+ *
  * Define a couple of classes for wrapping queries and metadata
  *
  * \author Bhaskara Marthi
@@ -45,7 +45,6 @@
 
 namespace warehouse_ros
 {
-
 /// \brief Represents a query to the db
 ///
 /// Usage:
@@ -102,6 +101,6 @@ public:
   virtual std::set<std::string> lookupFieldNames() const = 0;
 };
 
-} // namespace
+}  // namespace
 
-#endif // include guard
+#endif  // include guard

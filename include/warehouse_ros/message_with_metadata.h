@@ -29,8 +29,8 @@
  */
 
 /**
- * \file 
- * 
+ * \file
+ *
  * Defines the MessageWithMetadata class as well as some helper functions
  * to create and manipulate Metadata objects
  *
@@ -44,7 +44,6 @@
 
 namespace warehouse_ros
 {
-
 /************************************************************
  * MessageWithMetadata
  ***********************************************************/
@@ -52,60 +51,58 @@ namespace warehouse_ros
 /// \brief Class that wraps (via inheritance) a ROS message type, together
 /// with additional metadata (a yaml dictionary)
 /// \tparam M the message type being wrapped
-template<class M>
-  struct MessageWithMetadata : public M
+template <class M>
+struct MessageWithMetadata : public M
+{
+public:
+  MessageWithMetadata(Metadata::ConstPtr metadata, const M& msg = M()) : M(msg), metadata_(metadata)
   {
-  public:
-    MessageWithMetadata(Metadata::ConstPtr metadata, const M& msg = M()) :
-        M(msg), metadata_(metadata)
-    {
-    }
+  }
 
-    MessageWithMetadata(const MessageWithMetadata& m) :
-        M(m), metadata_(m.metadata_)
-    {
-    }
+  MessageWithMetadata(const MessageWithMetadata& m) : M(m), metadata_(m.metadata_)
+  {
+  }
 
-    MessageWithMetadata()
-    {
-    }
+  MessageWithMetadata()
+  {
+  }
 
-    Metadata::ConstPtr metadata_;
+  Metadata::ConstPtr metadata_;
 
-    std::string lookupString(const std::string& name) const
-    {
-      return metadata_->lookupString(name);
-    }
+  std::string lookupString(const std::string& name) const
+  {
+    return metadata_->lookupString(name);
+  }
 
-    double lookupDouble(const std::string& name) const
-    {
-      return metadata_->lookupDouble(name);
-    }
+  double lookupDouble(const std::string& name) const
+  {
+    return metadata_->lookupDouble(name);
+  }
 
-    int lookupInt(const std::string& name) const
-    {
-      return metadata_->lookupInt(name);
-    }
+  int lookupInt(const std::string& name) const
+  {
+    return metadata_->lookupInt(name);
+  }
 
-    bool lookupBool(const std::string& name) const
-    {
-      return metadata_->lookupBool(name);
-    }
+  bool lookupBool(const std::string& name) const
+  {
+    return metadata_->lookupBool(name);
+  }
 
-    bool lookupField(const std::string& name) const
-    {
-      return metadata_->lookupField(name);
-    }
+  bool lookupField(const std::string& name) const
+  {
+    return metadata_->lookupField(name);
+  }
 
-    std::set<std::string> lookupFieldNames() const
-    {
-      return metadata_->lookupFieldNames();
-    }
+  std::set<std::string> lookupFieldNames() const
+  {
+    return metadata_->lookupFieldNames();
+  }
 
-    typedef boost::shared_ptr<MessageWithMetadata<M> > Ptr;
-    typedef boost::shared_ptr<const MessageWithMetadata<M> > ConstPtr;
-  };
+  typedef boost::shared_ptr<MessageWithMetadata<M> > Ptr;
+  typedef boost::shared_ptr<const MessageWithMetadata<M> > ConstPtr;
+};
 
-} // namespace
+}  // namespace
 
-#endif // include guard
+#endif  // include guard

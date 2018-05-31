@@ -29,8 +29,8 @@
  */
 
 /**
- * \file 
- * 
+ * \file
+ *
  * Defines an iterator type over results of a query
  *
  * \author Bhaskara Marthi
@@ -45,7 +45,6 @@
 
 namespace warehouse_ros
 {
-
 class ResultIteratorHelper
 {
 public:
@@ -57,45 +56,46 @@ public:
   typedef boost::shared_ptr<ResultIteratorHelper> Ptr;
 };
 
-template<class M>
-  class ResultIterator : public boost::iterator_facade<ResultIterator<M>, typename MessageWithMetadata<M>::ConstPtr,
-      boost::single_pass_traversal_tag, typename MessageWithMetadata<M>::ConstPtr>
-  {
-  public:
-    /// \brief Constructor
-    ResultIterator(ResultIteratorHelper::Ptr results, bool metadata_only);
+template <class M>
+class ResultIterator
+    : public boost::iterator_facade<ResultIterator<M>, typename MessageWithMetadata<M>::ConstPtr,
+                                    boost::single_pass_traversal_tag, typename MessageWithMetadata<M>::ConstPtr>
+{
+public:
+  /// \brief Constructor
+  ResultIterator(ResultIteratorHelper::Ptr results, bool metadata_only);
 
-    /// \brief Copy constructor
-    ResultIterator(const ResultIterator& rhs);
+  /// \brief Copy constructor
+  ResultIterator(const ResultIterator& rhs);
 
-    /// \brief Constructor for past_the_end iterator
-    ResultIterator();
+  /// \brief Constructor for past_the_end iterator
+  ResultIterator();
 
-    /// \brief Destructor
-    ~ResultIterator();
+  /// \brief Destructor
+  ~ResultIterator();
 
-    ResultIterator& operator=(const ResultIterator& other);
+  ResultIterator& operator=(const ResultIterator& other);
 
-  private:
-    friend class boost::iterator_core_access;
+private:
+  friend class boost::iterator_core_access;
 
-    // Member functions needed to be an iterator
-    void increment();
-    typename MessageWithMetadata<M>::ConstPtr dereference() const;
-    bool equal(const ResultIterator<M>& other) const;
+  // Member functions needed to be an iterator
+  void increment();
+  typename MessageWithMetadata<M>::ConstPtr dereference() const;
+  bool equal(const ResultIterator<M>& other) const;
 
-    ResultIteratorHelper::Ptr results_;
-    const bool metadata_only_;
-  };
+  ResultIteratorHelper::Ptr results_;
+  const bool metadata_only_;
+};
 
-template<class M>
-  struct QueryResults
-  {
-    typedef std::pair<ResultIterator<M>, ResultIterator<M> > range_t;
-  };
+template <class M>
+struct QueryResults
+{
+  typedef std::pair<ResultIterator<M>, ResultIterator<M> > range_t;
+};
 
-} // namespace
+}  // namespace
 
 #include "impl/query_results_impl.hpp"
 
-#endif // include guard
+#endif  // include guard

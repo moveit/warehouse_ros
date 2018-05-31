@@ -29,8 +29,8 @@
  */
 
 /**
- * \file 
- * 
+ * \file
+ *
  * Implements TransformCollection class
  *
  * \author Bhaskara Marthi
@@ -41,7 +41,6 @@
 
 namespace warehouse_ros
 {
-
 tf::StampedTransform TransformCollection::lookupTransform(const std::string& target, const std::string& src,
                                                           const double t) const
 {
@@ -63,18 +62,17 @@ tf::StampedTransform TransformCollection::lookupTransform(const std::string& tar
       const tf::StampedTransform t(tr, h.stamp, h.frame_id, trans.child_frame_id);
       const bool ok = buffer.setTransform(t);
       ROS_ASSERT_MSG(ok, "Tf setTransform returned false for transform from %s "
-                     "to %s at %.4f",
+                         "to %s at %.4f",
                      trans.child_frame_id.c_str(), h.frame_id.c_str(), h.stamp.toSec());
     }
   }
   tf::StampedTransform result;
-  buffer.lookupTransform(target, src, ros::Time(t), result); // Can throw
+  buffer.lookupTransform(target, src, ros::Time(t), result);  // Can throw
   return result;
 }
 
 void TransformCollection::putTransform(tf::StampedTransform)
 {
-
 }
 
-} // namespace
+}  // namespace

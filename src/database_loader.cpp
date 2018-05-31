@@ -38,11 +38,9 @@
 
 namespace warehouse_ros
 {
-
 using std::string;
 
-DatabaseLoader::DatabaseLoader() :
-    nh_("~")
+DatabaseLoader::DatabaseLoader() : nh_("~")
 {
   initialize();
 }
@@ -56,8 +54,8 @@ void DatabaseLoader::initialize()
   // Create the plugin loader.
   try
   {
-    db_plugin_loader_.reset(
-        new pluginlib::ClassLoader<DatabaseConnection>("warehouse_ros", "warehouse_ros::DatabaseConnection"));
+    db_plugin_loader_.reset(new pluginlib::ClassLoader<DatabaseConnection>("warehouse_ros", "warehouse_ros::"
+                                                                                            "DatabaseConnection"));
   }
   catch (pluginlib::PluginlibException& ex)
   {
@@ -121,5 +119,4 @@ typename DatabaseConnection::Ptr DatabaseLoader::loadDatabase()
 
   return db;
 }
-
 }

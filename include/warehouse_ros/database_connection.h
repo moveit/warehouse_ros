@@ -29,8 +29,8 @@
  */
 
 /**
- * \file 
- * 
+ * \file
+ *
  * The DatabaseConnection class
  *
  * \author Connor Brew
@@ -43,7 +43,6 @@
 
 namespace warehouse_ros
 {
-
 class DatabaseConnection
 {
 public:
@@ -69,23 +68,23 @@ public:
 
   /// \brief Open a collection on the DB.  The collection is created if it doesn't exist.
   /// A DbClientConnection exception will be thrown if the database is not connected.
-  template<class M>
-    MessageCollection<M> openCollection(const std::string& db_name, const std::string& collection_name);
+  template <class M>
+  MessageCollection<M> openCollection(const std::string& db_name, const std::string& collection_name);
 
   /// \brief Open a collection on the DB.  The collection is created if it doesn't exist.
   /// A DbClientConnection exception will be thrown if the database is not connected.
-  template<class M>
-    typename MessageCollection<M>::Ptr openCollectionPtr(const std::string& db_name,
-                                                         const std::string& collection_name);
+  template <class M>
+  typename MessageCollection<M>::Ptr openCollectionPtr(const std::string& db_name, const std::string& collection_name);
 
   typedef boost::shared_ptr<DatabaseConnection> Ptr;
+
 protected:
   virtual MessageCollectionHelper::Ptr openCollectionHelper(const std::string& db_name,
                                                             const std::string& collection_name) = 0;
 };
 
-} // namespace
+}  // namespace
 
 #include "impl/database_connection_impl.hpp"
 
-#endif // include guard
+#endif  // include guard

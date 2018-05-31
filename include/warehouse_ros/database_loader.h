@@ -43,7 +43,6 @@
 
 namespace warehouse_ros
 {
-
 class DBConnectionStub : public DatabaseConnection
 {
 public:
@@ -71,19 +70,18 @@ public:
   {
     throw warehouse_ros::DbConnectException("Database is stub");
   }
+
 protected:
   typename MessageCollectionHelper::Ptr openCollectionHelper(const std::string& db_name,
-                                                             const std::string& collection_name)
-  {
-  }
-  ;
+                                                             const std::string& collection_name){};
 };
 
-/** \brief This class provides the mechanism to connect to a database and reads needed ROS parameters when appropriate. */
+/// \brief This class provides the mechanism to connect to a database and reads needed ROS parameters when appropriate.
 class DatabaseLoader
 {
 public:
-  /// \brief Takes a warehouse_ros DatabaseConnection.  The DatabaseConnection is expected to have already been initialized.
+  /// \brief Takes a warehouse_ros DatabaseConnection.
+  /// The DatabaseConnection is expected to have already been initialized.
   DatabaseLoader();
 
   ~DatabaseLoader();
@@ -100,7 +98,6 @@ private:
   ros::NodeHandle nh_;
   boost::scoped_ptr<pluginlib::ClassLoader<warehouse_ros::DatabaseConnection> > db_plugin_loader_;
 };
-
 }
 
 #endif

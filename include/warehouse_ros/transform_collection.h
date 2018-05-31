@@ -29,8 +29,8 @@
  */
 
 /**
- * \file 
- * 
+ * \file
+ *
  * Defines the TransformCollection class
  *
  * \author Bhaskara Marthi
@@ -45,7 +45,6 @@
 
 namespace warehouse_ros
 {
-
 /// This abstract base class just makes it easier to write code that works for
 /// both TransformCollection and regular tf TransformListener objects
 class TransformSource
@@ -60,16 +59,16 @@ public:
 /// The setup is that you have a db containing a collection with tf messages,
 /// in which each message has a metadata field named 'stamp', that equals the
 /// tf timestamp (this could be generated, e.g., with bag_to_db followed by
-/// add_metadata).  
+/// add_metadata).
 /// Given such a collection, this class allows querying for a transform as
 /// with tf::TransformListener::lookupTransform, except this is deterministic
 /// with no dependency on network state or message queues.
 class TransformCollection : public TransformSource
 {
 public:
-  TransformCollection(MessageCollection<tf::tfMessage> &coll, const double search_back = 10.0,
-                      const double search_forward = 1.0) :
-      TransformSource(), coll_(coll), search_back_(search_back), search_forward_(search_forward)
+  TransformCollection(MessageCollection<tf::tfMessage>& coll, const double search_back = 10.0,
+                      const double search_forward = 1.0)
+    : TransformSource(), coll_(coll), search_back_(search_back), search_forward_(search_forward)
   {
   }
 
@@ -88,26 +87,25 @@ private:
 };
 
 /// This wraps a tf transform listener so it can be used interchangeably
-/// with a TransformCollection.  
+/// with a TransformCollection.
 class LiveTransformSource : public TransformSource
 {
 public:
   /// \param timeout: Maximum timeout
   ///
   /// ros::init must be called before creating an instance
-  LiveTransformSource(double timeout = 0) :
-      TransformSource(), tf_(new tf::TransformListener()), timeout_(timeout)
+  LiveTransformSource(double timeout = 0) : TransformSource(), tf_(new tf::TransformListener()), timeout_(timeout)
   {
   }
 
-  /// Will return the transform if it becomes available before the timeout 
+  /// Will return the transform if it becomes available before the timeout
   /// expires, else throw a tf exception
   virtual tf::StampedTransform lookupTransform(const std::string& target, const std::string& source, double t) const
   {
     ros::Time tm(t);
     tf_->waitForTransform(target, source, tm, ros::Duration(timeout_));
     tf::StampedTransform trans;
-    tf_->lookupTransform(target, source, tm, trans); // Can throw
+    tf_->lookupTransform(target, source, tm, trans);  // Can throw
     return trans;
   }
 
@@ -117,6 +115,6 @@ private:
   ros::Duration timeout_;
 };
 
-} // namespace
+}  // namespace
 
-#endif // include guard
+#endif  // include guard
