@@ -119,4 +119,10 @@ typename DatabaseConnection::Ptr DatabaseLoader::loadDatabase()
 
   return db;
 }
+
+MessageCollectionHelper::Ptr DBConnectionStub::openCollectionHelper(const std::string& db_name,
+                                                                    const std::string& collection_name)
+{
+  return MessageCollectionHelper::Ptr();
+}
 }

@@ -73,7 +73,7 @@ public:
 
 protected:
   typename MessageCollectionHelper::Ptr openCollectionHelper(const std::string& db_name,
-                                                             const std::string& collection_name){};
+                                                             const std::string& collection_name);
 };
 
 /// \brief This class provides the mechanism to connect to a database and reads needed ROS parameters when appropriate.
