@@ -2,6 +2,12 @@
 Changelog for package warehouse_ros
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.9.1 (2018-10-17)
+------------------
+* fix missing return value (`#40 <https://github.com/ros-planning/warehouse_ros/issues/40>`_)
+* update include statements to use new pluginlib and class_loader headers (`#38 <https://github.com/ros-planning/warehouse_ros/issues/38>`_)
+* Contributors: Mikael Arguedas, Robert Haschke
+
 0.9.0 (2016-06-20)
 ------------------
 * [fix] Omit dependency on mongo (and replace with pluginlib) `#32 <https://github.com/ros-planning/warehouse_ros/issues/22>`_
