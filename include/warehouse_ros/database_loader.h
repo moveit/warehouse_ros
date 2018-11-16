@@ -46,34 +46,34 @@ namespace warehouse_ros
 class DBConnectionStub : public DatabaseConnection
 {
 public:
-  bool setParams(const std::string& host, unsigned port, float timeout)
+  bool setParams(const std::string& host, unsigned port, float timeout) override
   {
     return false;
   }
-  bool setTimeout(float timeout)
+  bool setTimeout(float timeout) override
   {
     return false;
   }
-  bool connect()
+  bool connect() override
   {
     return false;
   }
-  bool isConnected()
+  bool isConnected() override
   {
     return false;
   }
-  void dropDatabase(const std::string& db_name)
+  void dropDatabase(const std::string& db_name) override
   {
     throw warehouse_ros::DbConnectException("Database is stub");
   }
-  std::string messageType(const std::string& db_name, const std::string& collection_name)
+  std::string messageType(const std::string& db_name, const std::string& collection_name) override
   {
     throw warehouse_ros::DbConnectException("Database is stub");
   }
 
 protected:
   typename MessageCollectionHelper::Ptr openCollectionHelper(const std::string& db_name,
-                                                             const std::string& collection_name);
+                                                             const std::string& collection_name) override;
 };
 
 /// \brief This class provides the mechanism to connect to a database and reads needed ROS parameters when appropriate.
