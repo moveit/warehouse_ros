@@ -85,7 +85,7 @@ typename DatabaseConnection::Ptr DatabaseLoader::loadDatabase()
   DatabaseConnection::Ptr db;
   try
   {
-    db.reset(db_plugin_loader_->createUnmanagedInstance(db_plugin));
+    db = db_plugin_loader_->createUniqueInstance(db_plugin);
   }
   catch (pluginlib::PluginlibException& ex)
   {
