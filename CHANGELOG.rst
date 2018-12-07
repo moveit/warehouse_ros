@@ -2,6 +2,16 @@
 Changelog for package warehouse_ros
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.9.2 (2018-12-07)
+------------------
+* Fix various smaller issues. (`#41 <https://github.com/ros-planning/warehouse_ros/issues/41>`_)
+  * fix guard name
+  * virtual destructor for abstract class
+  * use managed pointers - createUniqueInstance()
+  * switch to C++11
+  * clang-tidy modernize-use-override
+* Contributors: Robert Haschke
+
 0.9.1 (2018-10-17)
 ------------------
 * fix missing return value (`#40 <https://github.com/ros-planning/warehouse_ros/issues/40>`_)
