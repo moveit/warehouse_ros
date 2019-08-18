@@ -2,6 +2,12 @@
 Changelog for package warehouse_ros
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.9.3 (2019-08-18)
+------------------
+* Fix const char* -> std::string conversion
+* Fix install location for warehouse_ros. (`#43 <https://github.com/ros-planning/warehouse_ros/issues/43>`_)
+* Contributors: Robert Haschke, Sean Yen
+
 0.9.2 (2018-12-07)
 ------------------
 * Fix various smaller issues. (`#41 <https://github.com/ros-planning/warehouse_ros/issues/41>`_)
