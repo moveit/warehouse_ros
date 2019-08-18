@@ -59,6 +59,11 @@ public:
   {
   }
   virtual void append(const std::string& name, const std::string& val) = 0;
+  // explicitly provide signature for const char*, otherwise bool version is called
+  void append(const std::string& name, const char* val)
+  {
+    append(name, std::string(val));
+  }
   virtual void append(const std::string& name, const double val) = 0;
   virtual void append(const std::string& name, const int val) = 0;
   virtual void append(const std::string& name, const bool val) = 0;
@@ -90,6 +95,10 @@ public:
   {
   }
   virtual void append(const std::string& name, const std::string& val) = 0;
+  void append(const std::string& name, const char* val)
+  {
+    append(name, std::string(val));
+  }
   virtual void append(const std::string& name, const double val) = 0;
   virtual void append(const std::string& name, const int val) = 0;
   virtual void append(const std::string& name, const bool val) = 0;
