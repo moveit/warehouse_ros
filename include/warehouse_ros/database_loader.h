@@ -46,11 +46,11 @@ namespace warehouse_ros
 class DBConnectionStub : public DatabaseConnection
 {
 public:
-  bool setParams(const std::string& host, unsigned port, float timeout) override
+  bool setParams(const std::string& /*host*/, unsigned /*port*/, float /*timeout*/) override
   {
     return false;
   }
-  bool setTimeout(float timeout) override
+  bool setTimeout(float /*timeout*/) override
   {
     return false;
   }
@@ -62,11 +62,11 @@ public:
   {
     return false;
   }
-  void dropDatabase(const std::string& db_name) override
+  void dropDatabase(const std::string& /*db_name*/) override
   {
     throw warehouse_ros::DbConnectException("Database is stub");
   }
-  std::string messageType(const std::string& db_name, const std::string& collection_name) override
+  std::string messageType(const std::string& /*db_name*/, const std::string& /*collection_name*/) override
   {
     throw warehouse_ros::DbConnectException("Database is stub");
   }

@@ -60,7 +60,7 @@ tf::StampedTransform TransformCollection::lookupTransform(const std::string& tar
       const std_msgs::Header& h = trans.header;
       const tf::Transform tr(tf::Quaternion(q.x, q.y, q.z, q.w), tf::Vector3(v.x, v.y, v.z));
       const tf::StampedTransform t(tr, h.stamp, h.frame_id, trans.child_frame_id);
-      const bool ok = buffer.setTransform(t);
+      buffer.setTransform(t);
       ROS_ASSERT_MSG(ok, "Tf setTransform returned false for transform from %s "
                          "to %s at %.4f",
                      trans.child_frame_id.c_str(), h.frame_id.c_str(), h.stamp.toSec());
