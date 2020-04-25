@@ -16,13 +16,11 @@ find_package(Boost COMPONENTS system filesystem thread)
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES warehouse_ros
-  CATKIN_DEPENDS roscpp rostime std_msgs geometry_msgs
+  CATKIN_DEPENDS roscpp rostime std_msgs geometry_msgs tf
   DEPENDS Boost
 )
 
 include_directories(include ${catkin_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
-link_directories(${catkin_LINK_DIRS})
-link_directories(${Boost_LIBRARY_DIRS})
 
 set(warehouse_srcs
   src/database_loader.cpp
