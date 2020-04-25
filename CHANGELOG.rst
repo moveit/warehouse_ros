@@ -2,6 +2,13 @@
 Changelog for package warehouse_ros
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.9.4 (2020-04-25)
+------------------
+* Cleanup: fix catkin_lint warnings, remove obsolete test folder
+* Fix unused-parameter warnings (`#44 <https://github.com/ros-planning/warehouse_ros/issues/44>`_)
+* Bump required cmake version (`#45 <https://github.com/ros-planning/warehouse_ros/issues/45>`_)
+* Contributors: Michael Görner, Robert Haschke
+
 0.9.3 (2019-08-18)
 ------------------
 * Fix const char* -> std::string conversion
