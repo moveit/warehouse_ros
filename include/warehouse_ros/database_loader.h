@@ -82,7 +82,7 @@ class DatabaseLoader
 public:
   /// \brief Takes a warehouse_ros DatabaseConnection.
   /// The DatabaseConnection is expected to have already been initialized.
-  DatabaseLoader();
+  DatabaseLoader(const rclcpp::Node::SharedPtr& node);
 
   ~DatabaseLoader();
 
@@ -95,7 +95,7 @@ public:
   typename DatabaseConnection::Ptr loadDatabase();
 
 private:
-  ros::NodeHandle nh_;
+  rclcpp::Node::SharedPtr node_;
   boost::scoped_ptr<pluginlib::ClassLoader<warehouse_ros::DatabaseConnection> > db_plugin_loader_;
 };
 }
