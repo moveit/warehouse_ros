@@ -37,6 +37,9 @@
  * \author Bhaskara Marthi
  */
 
+#include <rcpputils/asserts.hpp>
+#include <rclcpp/serialization.hpp>
+
 namespace warehouse_ros
 {
 template <class M>
@@ -83,15 +86,21 @@ void ResultIterator<M>::increment()
 template <class M>
 typename MessageWithMetadata<M>::ConstPtr ResultIterator<M>::dereference() const
 {
-  ROS_ASSERT(results_);
+  rcpputils::assert_true(bool(results_), "Invalid result iterator pointer.");
 
   typename MessageWithMetadata<M>::Ptr msg(new MessageWithMetadata<M>(results_->metadata()));
   if (!metadata_only_)
   {
     std::string str = results_->message();
-    uint8_t* buf = (uint8_t*)str.c_str();
-    ros::serialization::IStream istream(buf, str.size());
-    ros::serialization::Serializer<M>::read(istream, *msg);
+    const auto content_size = str.size() + 1;  // accounting for null terminator
+    rclcpp::SerializedMessage serialized_message(content_size);
+    // manually copy some content
+    auto& rcl_handle = serialized_message.get_rcl_serialized_message();
+    memcpy(rcl_handle.buffer, str.c_str(), str.size());
+    rcl_handle.buffer[str.size()] = '\0';
+    rcl_handle.buffer_length = content_size;
+    auto serializer = rclcpp::Serialization<M>();
+    serializer.deserialize_message(&serialized_message, msg.get());
   }
   return msg;
 }
