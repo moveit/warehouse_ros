@@ -36,11 +36,13 @@
 
 #include <warehouse_ros/database_loader.h>
 
+static const rclcpp::Logger LOGGER = rclcpp::get_logger("warehouse_ros.database_loader");
+
 namespace warehouse_ros
 {
 using std::string;
 
-DatabaseLoader::DatabaseLoader() : nh_("~")
+DatabaseLoader::DatabaseLoader(const rclcpp::Node::SharedPtr& node) : node_(node)
 {
   initialize();
 }
@@ -59,7 +61,7 @@ void DatabaseLoader::initialize()
   }
   catch (pluginlib::PluginlibException& ex)
   {
-    ROS_FATAL_STREAM("Exception while creating database_connection plugin loader " << ex.what());
+    RCLCPP_FATAL_STREAM(LOGGER, "Exception while creating database_connection plugin loader " << ex.what());
   }
 }
 
@@ -73,14 +75,12 @@ typename DatabaseConnection::Ptr DatabaseLoader::loadDatabase()
   // Search for the warehouse_plugin parameter in the local namespace of the node, and up the tree of namespaces.
   // If the desired param is not found, make a final attempt to look for the param in the default namespace
   string paramName;
-  if (!nh_.searchParam("warehouse_plugin", paramName))
-    paramName = "warehouse_plugin";
+  // TODO: Revise parameter lookup
+  // if (!nh_.searchParam("warehouse_plugin", paramName))
+  paramName = "warehouse_plugin";
   string db_plugin;
-  if (!nh_.getParamCached(paramName, db_plugin))
-  {
-    ROS_ERROR("Could not find parameter for database plugin name");
-    return typename DatabaseConnection::Ptr(new DBConnectionStub());
-  }
+  if (!node_->get_parameter_or(paramName, db_plugin, std::string("warehouse_ros_mongo::MongoDatabaseConnection")))
+    RCLCPP_ERROR(LOGGER, "Could not find parameter for database plugin name %s", db_plugin.c_str());
 
   DatabaseConnection::Ptr db;
   try
@@ -89,25 +89,28 @@ typename DatabaseConnection::Ptr DatabaseLoader::loadDatabase()
   }
   catch (pluginlib::PluginlibException& ex)
   {
-    ROS_ERROR_STREAM("Exception while loading database plugin '" << db_plugin << "': " << ex.what() << std::endl);
+    RCLCPP_ERROR_STREAM(LOGGER,
+                        "Exception while loading database plugin '" << db_plugin << "': " << ex.what() << std::endl);
     return typename DatabaseConnection::Ptr(new DBConnectionStub());
   }
 
   bool hostFound = false;
   bool portFound = false;
 
-  if (!nh_.searchParam("warehouse_host", paramName))
-    paramName = "warehouse_host";
+  // TODO: Revise parameter lookup
+  // if (!nh_.searchParam("warehouse_host", paramName))
+  paramName = "warehouse_host";
   std::string host;
-  if (nh_.getParamCached(paramName, host))
+  if (node_->get_parameter(paramName, host))
   {
     hostFound = true;
   }
 
-  if (!nh_.searchParam("warehouse_port", paramName))
-    paramName = "warehouse_port";
+  // TODO: Revise parameter lookup
+  // if (!nh_.searchParam("warehouse_port", paramName))
+  paramName = "warehouse_port";
   int port;
-  if (nh_.getParamCached(paramName, port))
+  if (node_->get_parameter(paramName, port))
   {
     portFound = true;
   }
