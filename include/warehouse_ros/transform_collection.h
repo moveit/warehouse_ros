@@ -40,8 +40,11 @@
 #define WAREHOUSE_ROS_TF_COLLECTION_H
 
 #include <warehouse_ros/message_collection.h>
-#include <tf/transform_listener.h>
-#include <tf/tfMessage.h>
+#include <tf2_ros/transform_listener.h>
+#include <tf2_msgs/msg/tf_message.hpp>
+#include <geometry_msgs/msg/transform_stamped.hpp>
+#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
+#include <tf2_ros/buffer.h>
 
 namespace warehouse_ros
 {
@@ -52,8 +55,8 @@ class TransformSource
 public:
   /// Get the transform between two frames at a given timepoint.  Can throw
   /// all the usual tf exceptions if the transform is unavailable.
-  virtual tf::StampedTransform lookupTransform(const std::string& target_frame, const std::string& source_frame,
-                                               double t) const = 0;
+  virtual geometry_msgs::msg::TransformStamped lookupTransform(const std::string& target_frame,
+                                                               const std::string& source_frame, double t) const = 0;
 };
 
 /// The setup is that you have a db containing a collection with tf messages,
@@ -66,22 +69,27 @@ public:
 class TransformCollection : public TransformSource
 {
 public:
-  TransformCollection(MessageCollection<tf::tfMessage>& coll, const double search_back = 10.0,
+  TransformCollection(MessageCollection<tf2_msgs::msg::TFMessage>& coll, const double search_back = 10.0,
                       const double search_forward = 1.0)
     : TransformSource(), coll_(coll), search_back_(search_back), search_forward_(search_forward)
   {
+    node_ = rclcpp::Node::make_shared("TransformCollection");
+    rclcpp::Clock::SharedPtr clock = std::make_shared<rclcpp::Clock>(RCL_SYSTEM_TIME);
+    tf_buffer_ = std::make_shared<tf2_ros::Buffer>(clock);
   }
 
   /// Get the transform between two frames at a given timepoint.  Can throw
   /// all the exceptions tf::lookupTransform can.
-  tf::StampedTransform lookupTransform(const std::string& target_frame, const std::string& source_frame,
-                                       double t) const override;
+  geometry_msgs::msg::TransformStamped lookupTransform(const std::string& target_frame, const std::string& source_frame,
+                                                       double t) const override;
 
   /// Put the transform into the collection.
-  void putTransform(tf::StampedTransform);
+  void putTransform(geometry_msgs::msg::TransformStamped);
 
 private:
-  MessageCollection<tf::tfMessage> coll_;
+  MessageCollection<tf2_msgs::msg::TFMessage> coll_;
+  rclcpp::Node::SharedPtr node_;
+  std::shared_ptr<tf2_ros::Buffer> tf_buffer_;
   double search_back_;
   double search_forward_;
 };
@@ -94,25 +102,32 @@ public:
   /// \param timeout: Maximum timeout
   ///
   /// ros::init must be called before creating an instance
-  LiveTransformSource(double timeout = 0) : TransformSource(), tf_(new tf::TransformListener()), timeout_(timeout)
+  LiveTransformSource(double timeout = 0) : TransformSource()
   {
+    timeout_ = tf2::durationFromSec(timeout);
+
+    node_ = rclcpp::Node::make_shared("LiveTransformSource");
+    rclcpp::Clock::SharedPtr clock = std::make_shared<rclcpp::Clock>(RCL_SYSTEM_TIME);
+    tf_buffer_ = std::make_shared<tf2_ros::Buffer>(clock);
+    tf_ = std::make_shared<tf2_ros::TransformListener>(*tf_buffer_, node_, false);
   }
 
   /// Will return the transform if it becomes available before the timeout
   /// expires, else throw a tf exception
-  tf::StampedTransform lookupTransform(const std::string& target, const std::string& source, double t) const override
+  geometry_msgs::msg::TransformStamped lookupTransform(const std::string& target, const std::string& source,
+                                                       double t) const override
   {
-    ros::Time tm(t);
-    tf_->waitForTransform(target, source, tm, ros::Duration(timeout_));
-    tf::StampedTransform trans;
-    tf_->lookupTransform(target, source, tm, trans);  // Can throw
+    tf2::TimePoint tm = tf2::timeFromSec(t);
+    geometry_msgs::msg::TransformStamped trans =
+        tf_buffer_->lookupTransform(target, source, tm, timeout_);  // Can throw
     return trans;
   }
 
 private:
-  ros::NodeHandle nh_;
-  boost::shared_ptr<tf::TransformListener> tf_;
-  ros::Duration timeout_;
+  rclcpp::Node::SharedPtr node_;
+  std::shared_ptr<tf2_ros::Buffer> tf_buffer_;
+  std::shared_ptr<tf2_ros::TransformListener> tf_;
+  tf2::Duration timeout_;
 };
 
 }  // namespace
