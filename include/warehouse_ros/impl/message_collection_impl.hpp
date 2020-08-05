@@ -37,16 +37,24 @@
  * \author Bhaskara Marthi
  */
 
+#include <rcutils/allocator.h>
+#include <rclcpp/serialization.hpp>
+#include <rosidl_runtime_cpp/traits.hpp>
+#include <openssl/md5.h>
+
 namespace warehouse_ros
 {
 template <class M>
 MessageCollection<M>::MessageCollection(MessageCollectionHelper::Ptr collection) : collection_(collection)
 {
-  typedef typename ros::message_traits::DataType<M> DataType;
-  const std::string datatype = DataType().value();
-  typedef typename ros::message_traits::MD5Sum<M> Md5;
-  const std::string md5 = Md5().value();
-  md5sum_matches_ = collection_->initialize(datatype, md5);
+  const std::string datatype = rosidl_generator_traits::data_type<M>();
+  // TODO: Convert ros message MD5Sum value
+  // typedef typename ros::message_traits::MD5Sum<M> Md5;
+  unsigned char result[MD5_DIGEST_LENGTH];
+  MD5((unsigned char*)datatype.c_str(), datatype.size(), result);
+  const std::string md5_str = (char*)result;
+
+  md5sum_matches_ = collection_->initialize(datatype, md5_str);
 }
 
 template <class M>
@@ -74,16 +82,15 @@ void MessageCollection<M>::insert(const M& msg, Metadata::Ptr metadata)
   if (!md5sum_matches_)
     throw Md5SumException("Cannot insert additional elements.");
 
-  metadata->append("creation_time", ros::Time::now().toSec());
+  metadata->append("creation_time", rclcpp::Clock(RCL_SYSTEM_TIME).now().seconds());
 
   /// Serialize the message into a buffer
-  size_t serial_size = ros::serialization::serializationLength(msg);
-  boost::shared_array<uint8_t> buffer(new uint8_t[serial_size]);
-  ros::serialization::OStream stream(buffer.get(), serial_size);
-  ros::serialization::serialize(stream, msg);
-  char* data = (char*)buffer.get();
+  rclcpp::SerializedMessage serialized_msg;
+  static rclcpp::Serialization<M> serializer;
+  serializer.serialize_message(&msg, &serialized_msg);
 
-  collection_->insert(data, serial_size, metadata);
+  char* data = (char*)serialized_msg.get_rcl_serialized_message().buffer;
+  collection_->insert(data, serialized_msg.size(), metadata);
 }
 
 template <class M>
@@ -153,4 +160,4 @@ Metadata::Ptr MessageCollection<M>::createMetadata() const
   return collection_->createMetadata();
 }
 
-}  // namespace
+}  // namespace warehouse_ros
