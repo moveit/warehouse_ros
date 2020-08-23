@@ -128,4 +128,4 @@ MessageCollectionHelper::Ptr DBConnectionStub::openCollectionHelper(const std::s
 {
   return MessageCollectionHelper::Ptr();
 }
-}
+}  // namespace warehouse_ros

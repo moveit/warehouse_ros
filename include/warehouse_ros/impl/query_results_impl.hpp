@@ -112,4 +112,4 @@ bool ResultIterator<M>::equal(const ResultIterator<M>& other) const
   return (!results_ && !other.results_);
 }
 
-}  // namespace
+}  // namespace warehouse_ros

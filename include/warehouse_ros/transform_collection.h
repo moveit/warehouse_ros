@@ -130,6 +130,6 @@ private:
   tf2::Duration timeout_;
 };
 
-}  // namespace
+}  // namespace warehouse_ros
 
 #endif  // include guard

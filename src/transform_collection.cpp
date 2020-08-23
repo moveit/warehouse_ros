@@ -79,4 +79,4 @@ void TransformCollection::putTransform(geometry_msgs::msg::TransformStamped)
 {
 }
 
-}  // namespace
+}  // namespace warehouse_ros
