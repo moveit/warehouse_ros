@@ -101,19 +101,15 @@ typename DatabaseConnection::Ptr DatabaseLoader::loadDatabase()
   // if (!nh_.searchParam("warehouse_host", paramName))
   paramName = "warehouse_host";
   std::string host;
-  if (node_->get_parameter(paramName, host))
-  {
-    hostFound = true;
-  }
+  node_->get_parameter_or(paramName, host, std::string("localhost"));
+  hostFound = true;
 
   // TODO: Revise parameter lookup
   // if (!nh_.searchParam("warehouse_port", paramName))
   paramName = "warehouse_port";
   int port;
-  if (node_->get_parameter(paramName, port))
-  {
-    portFound = true;
-  }
+  node_->get_parameter_or(paramName, port, 33829);
+  portFound = true;
 
   if (hostFound && portFound)
   {
