@@ -56,4 +56,4 @@ typename MessageCollection<M>::Ptr DatabaseConnection::openCollectionPtr(const s
   return typename MessageCollection<M>::Ptr(new MessageCollection<M>(openCollectionHelper(db_name, collection_name)));
 }
 
-}  // namespace
+}  // namespace warehouse_ros

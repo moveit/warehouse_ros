@@ -58,8 +58,8 @@ public:
 
 template <class M>
 class ResultIterator
-    : public boost::iterator_facade<ResultIterator<M>, typename MessageWithMetadata<M>::ConstPtr,
-                                    boost::single_pass_traversal_tag, typename MessageWithMetadata<M>::ConstPtr>
+  : public boost::iterator_facade<ResultIterator<M>, typename MessageWithMetadata<M>::ConstPtr,
+                                  boost::single_pass_traversal_tag, typename MessageWithMetadata<M>::ConstPtr>
 {
 public:
   /// \brief Constructor
@@ -94,7 +94,7 @@ struct QueryResults
   typedef std::pair<ResultIterator<M>, ResultIterator<M> > range_t;
 };
 
-}  // namespace
+}  // namespace warehouse_ros
 
 #include "impl/query_results_impl.hpp"
 

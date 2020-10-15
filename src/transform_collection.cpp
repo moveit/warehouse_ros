@@ -39,40 +39,44 @@
 #include <warehouse_ros/transform_collection.h>
 #include <boost/foreach.hpp>
 
+static const rclcpp::Logger LOGGER = rclcpp::get_logger("warehouse_ros.transform_collection");
+
 namespace warehouse_ros
 {
-tf::StampedTransform TransformCollection::lookupTransform(const std::string& target, const std::string& src,
-                                                          const double t) const
+geometry_msgs::msg::TransformStamped TransformCollection::lookupTransform(const std::string& target,
+                                                                          const std::string& src, const double t) const
 {
   // Query all transforms between t-search_back_ and t+search_forward_
   Query::Ptr q = coll_.createQuery();
   q->appendRangeInclusive("stamp", t - search_back_, t + search_forward_);
 
   // Iterate over the messages and add them to a Transformer
-  tf::Transformer buffer(true, ros::Duration(search_back_ + search_forward_ * 1.1));
-  typename QueryResults<tf::tfMessage>::range_t res = coll_.query(q);
-  for (ResultIterator<tf::tfMessage> it = res.first; it != res.second; ++it)
+  tf2::Duration time_out = tf2::durationFromSec(search_back_ + search_forward_ * 1.1);
+  typename QueryResults<tf2_msgs::msg::TFMessage>::range_t res = coll_.query(q);
+  for (ResultIterator<tf2_msgs::msg::TFMessage> it = res.first; it != res.second; ++it)
   {
-    BOOST_FOREACH (const geometry_msgs::TransformStamped& trans, (*it)->transforms)
+    for (const geometry_msgs::msg::TransformStamped& trans : (*it)->transforms)
     {
-      const geometry_msgs::Vector3& v = trans.transform.translation;
-      const geometry_msgs::Quaternion& q = trans.transform.rotation;
-      const std_msgs::Header& h = trans.header;
-      const tf::Transform tr(tf::Quaternion(q.x, q.y, q.z, q.w), tf::Vector3(v.x, v.y, v.z));
-      const tf::StampedTransform t(tr, h.stamp, h.frame_id, trans.child_frame_id);
-      const bool ok = buffer.setTransform(t);
-      (void)ok;
-      ROS_ASSERT_MSG(ok, "Tf setTransform returned false for transform from %s to %s at %.4f",
-                     trans.child_frame_id.c_str(), h.frame_id.c_str(), h.stamp.toSec());
+      const geometry_msgs::msg::Vector3& v = trans.transform.translation;
+      const geometry_msgs::msg::Quaternion& q = trans.transform.rotation;
+      const std_msgs::msg::Header& h = trans.header;
+      const tf2::Transform tr(tf2::Quaternion(q.x, q.y, q.z, q.w), tf2::Vector3(v.x, v.y, v.z));
+      geometry_msgs::msg::TransformStamped t =
+          tf2::toMsg(tf2::Stamped<tf2::Transform>(tr, tf2::getTimestamp(trans), h.frame_id));
+      t.child_frame_id = trans.child_frame_id;
+      const bool ok = tf_buffer_->setTransform(t, "TransformCollection");
+      RCLCPP_FATAL_EXPRESSION(LOGGER, ok, "Tf setTransform returned false for transform from %s to %s at %.4f",
+                              trans.child_frame_id.c_str(), h.frame_id.c_str(),
+                              tf2::timeToSec(tf2::getTimestamp(trans)));
     }
   }
-  tf::StampedTransform result;
-  buffer.lookupTransform(target, src, ros::Time(t), result);  // Can throw
+  geometry_msgs::msg::TransformStamped result =
+      tf_buffer_->lookupTransform(target, src, tf2::timeFromSec(t), time_out);  // Can throw
   return result;
 }
 
-void TransformCollection::putTransform(tf::StampedTransform)
+void TransformCollection::putTransform(geometry_msgs::msg::TransformStamped)
 {
 }
 
-}  // namespace
+}  // namespace warehouse_ros

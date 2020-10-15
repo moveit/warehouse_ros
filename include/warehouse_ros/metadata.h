@@ -39,7 +39,7 @@
 #ifndef WAREHOUSE_ROS_METADATA_H
 #define WAREHOUSE_ROS_METADATA_H
 
-#include <ros/ros.h>
+#include <rclcpp/rclcpp.hpp>
 #include <boost/shared_ptr.hpp>
 #include <set>
 
@@ -110,6 +110,6 @@ public:
   virtual std::set<std::string> lookupFieldNames() const = 0;
 };
 
-}  // namespace
+}  // namespace warehouse_ros
 
 #endif  // include guard

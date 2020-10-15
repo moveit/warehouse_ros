@@ -87,7 +87,7 @@ protected:
                                                             const std::string& collection_name) = 0;
 };
 
-}  // namespace
+}  // namespace warehouse_ros
 
 #include "impl/database_connection_impl.hpp"
 

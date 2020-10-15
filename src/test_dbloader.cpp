@@ -1,16 +1,22 @@
 #include <warehouse_ros/database_loader.h>
-#include <ros/ros.h>
+#include <rclcpp/rclcpp.hpp>
+
+static const rclcpp::Logger LOGGER = rclcpp::get_logger("warehouse_ros.test_dbloader");
 
 int main(int argc, char** argv)
 {
-  ros::init(argc, argv, "db_loader_test", ros::init_options::AnonymousName);
+  rclcpp::init(argc, argv);
+  rclcpp::NodeOptions node_options;
+  node_options.allow_undeclared_parameters(true);
+  node_options.automatically_declare_parameters_from_overrides(true);
+  rclcpp::Node::SharedPtr node = rclcpp::Node::make_shared("db_loader_test", node_options);
 
-  warehouse_ros::DatabaseLoader dbloader;
+  warehouse_ros::DatabaseLoader dbloader(node);
   warehouse_ros::DatabaseConnection::Ptr conn = dbloader.loadDatabase();
   // conn->setParams("localhost", 27017, 10.0);
   conn->setTimeout(10.0);
   if (!conn->connect())
-    ROS_ERROR("Failed to connect to DB");
+    RCLCPP_ERROR(LOGGER, "Failed to connect to DB");
 
-  ros::shutdown();
+  rclcpp::spin(node);
 }
