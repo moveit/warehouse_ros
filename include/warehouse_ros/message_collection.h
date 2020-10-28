@@ -56,6 +56,7 @@ public:
   virtual Query::Ptr createQuery() const = 0;
   virtual Metadata::Ptr createMetadata() const = 0;
   virtual std::string collectionName() const = 0;
+  virtual ~MessageCollectionHelper() = default;
 
   typedef boost::shared_ptr<MessageCollectionHelper> Ptr;
 };
