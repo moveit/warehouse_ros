@@ -72,13 +72,8 @@ public:
   /// created if it doesn't exist.
   MessageCollection(MessageCollectionHelper::Ptr collection);
 
-  /// \brief Copy constructor
-  MessageCollection(const MessageCollection& rhs);
-
-  /// \brief Destructor
-  ~MessageCollection();
-
-  MessageCollection& operator=(const MessageCollection& other);
+  /// \brief Default constructor
+  MessageCollection() = default;
 
   /// \brief Insert a ROS message, together with some optional metadata,
   /// into the db
@@ -130,7 +125,7 @@ public:
 
 private:
   MessageCollectionHelper::Ptr collection_;
-  bool md5sum_matches_;
+  bool md5sum_matches_ = false;
 };
 
 }  // namespace warehouse_ros
