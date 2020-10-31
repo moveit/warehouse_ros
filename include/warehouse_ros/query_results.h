@@ -64,16 +64,8 @@ public:
   /// \brief Constructor
   ResultIterator(ResultIteratorHelper::Ptr results, bool metadata_only);
 
-  /// \brief Copy constructor
-  ResultIterator(const ResultIterator& rhs);
-
-  /// \brief Constructor for past_the_end iterator
-  ResultIterator();
-
-  /// \brief Destructor
-  ~ResultIterator();
-
-  ResultIterator& operator=(const ResultIterator& other);
+  /// \brief Default constructor
+  ResultIterator() = default;
 
 private:
   friend class boost::iterator_core_access;
@@ -84,7 +76,7 @@ private:
   bool equal(const ResultIterator<M>& other) const;
 
   ResultIteratorHelper::Ptr results_;
-  const bool metadata_only_;
+  bool metadata_only_ = false;
 };
 
 template <class M>

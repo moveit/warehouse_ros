@@ -56,25 +56,6 @@ MessageCollection<M>::MessageCollection(MessageCollectionHelper::Ptr collection)
 }
 
 template <class M>
-MessageCollection<M>::MessageCollection(const MessageCollection<M>& other)
-  : collection_(other.collection_), md5sum_matches_(other.md5sum_matches_)
-{
-}
-
-template <class M>
-MessageCollection<M>::~MessageCollection()
-{
-}
-
-template <class M>
-MessageCollection<M>& MessageCollection<M>::operator=(const MessageCollection& other)
-{
-  collection_ = other.collection_;
-  md5sum_matches_ = other.md5sum_matches_;
-  return *this;
-}
-
-template <class M>
 void MessageCollection<M>::insert(const M& msg, Metadata::Ptr metadata)
 {
   if (!md5sum_matches_)
