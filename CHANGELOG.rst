@@ -2,6 +2,17 @@
 Changelog for package warehouse_ros
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+2.0.0 (2020-11-20)
+-----------
+* [maint] Fix `-Wcast-qual` compile warnings (`#49 <https://github.com/ros-planning/warehouse_ros/issues/49>`_)
+* [ros2-migration] Port to ROS 2 (`#48 <https://github.com/ros-planning/warehouse_ros/issues/48>`_)
+  * Migrate CMakeLists.txt, package.xml to ROS 2
+  * ROS 2 API Migration (Logging, messages, node, tf2)
+  * Implement ROS 2 message serialization
+  * Hotfix for MD5sum message type matching
+  * Enable CI: clang-format, ament_lint on Foxy
+* Contributors: Yu Yan
+
 0.9.4 (2020-04-25)
 ------------------
 * Cleanup: fix catkin_lint warnings, remove obsolete test folder
