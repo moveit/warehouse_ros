@@ -153,4 +153,4 @@ Metadata::Ptr MessageCollection<M>::createMetadata() const
   return collection_->createMetadata();
 }
 
-}  // namespace
+}  // namespace warehouse_ros

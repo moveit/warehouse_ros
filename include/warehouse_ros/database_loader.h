@@ -98,6 +98,6 @@ private:
   ros::NodeHandle nh_;
   boost::scoped_ptr<pluginlib::ClassLoader<warehouse_ros::DatabaseConnection> > db_plugin_loader_;
 };
-}
+}  // namespace warehouse_ros
 
 #endif
