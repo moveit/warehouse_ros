@@ -132,7 +132,7 @@ private:
   bool md5sum_matches_;
 };
 
-}  // namespace
+}  // namespace warehouse_ros
 
 #include "impl/message_collection_impl.hpp"
 

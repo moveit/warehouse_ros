@@ -75,4 +75,4 @@ void TransformCollection::putTransform(tf::StampedTransform)
 {
 }
 
-}  // namespace
+}  // namespace warehouse_ros

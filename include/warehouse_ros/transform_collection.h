@@ -115,6 +115,6 @@ private:
   ros::Duration timeout_;
 };
 
-}  // namespace
+}  // namespace warehouse_ros
 
 #endif  // include guard

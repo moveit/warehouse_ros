@@ -84,6 +84,6 @@ struct Md5SumException : public WarehouseRosException
   }
 };
 
-}  // namespace
+}  // namespace warehouse_ros
 
 #endif  // include guard

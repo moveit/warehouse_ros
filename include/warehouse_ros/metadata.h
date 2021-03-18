@@ -110,6 +110,6 @@ public:
   virtual std::set<std::string> lookupFieldNames() const = 0;
 };
 
-}  // namespace
+}  // namespace warehouse_ros
 
 #endif  // include guard
