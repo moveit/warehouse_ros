@@ -13,7 +13,7 @@ jobs:
           - {ROS_DISTRO: foxy, ROS_REPO: main}
           - {ROS_DISTRO: foxy, ROS_REPO: testing}
     env:
-      CCACHE_DIR: ~/.ccache
+      CCACHE_DIR: /github/home/.ccache
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
