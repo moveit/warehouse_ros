@@ -14,6 +14,7 @@ jobs:
           - {ROS_DISTRO: foxy, ROS_REPO: testing}
     env:
       CCACHE_DIR: /$HOME/.ccache
+      AFTER_BUILD_TARGET_WORKSPACE: 'ccache -s'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -25,3 +26,5 @@ jobs:
             ccache-${{ matrix.env.ROS_DISTRO }}-${{ matrix.env.ROS_REPO }}
       - uses: 'ros-industrial/industrial_ci@master'
         env: ${{ matrix.env }}
+      - name: ccache stats
+        run: sudo apt -qq install ccache && ccache -s
