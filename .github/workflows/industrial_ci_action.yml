@@ -9,26 +9,19 @@ jobs:
   industrial_ci:
     strategy:
       matrix:
-        ros_distro: [ foxy ]
-        ros_repo: [ main, testing ]
+        env:
+          - {ROS_DISTRO: foxy, ROS_REPO: main}
+          - {ROS_DISTRO: foxy, ROS_REPO: testing}
+    env:
+      CCACHE_DIR: /home/runner/.ccache
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: install ccache
-        run: sudo apt -qq install ccache
       - uses: actions/cache@v2
         with:
-          path: ~/.ccache
+          path: ${{ env.CCACHE_DIR }}
           key: ccache-${{ matrix.env.ROS_DISTRO }}-${{ matrix.env.ROS_REPO }}-${{ github.sha }}  
           restore-keys: |
             ccache-${{ matrix.env.ROS_DISTRO }}-${{ matrix.env.ROS_REPO }}
-      - name: ccache stats
-        run: ccache -s
       - uses: 'ros-industrial/industrial_ci@master'
-        env: 
-          ROS_DISTRO: ${{ matrix.ros_distro }}
-          ROS_REPO: ${{ matrix.ros_repo }}
-          CCACHE_DIR: ~/.ccache
-          AFTER_BUILD_TARGET_WORKSPACE: 'ccache -s'
-      - name: ccache stats
-        run: ccache -s
+        env: ${{ matrix.env }}
