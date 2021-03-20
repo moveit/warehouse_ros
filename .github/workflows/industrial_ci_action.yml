@@ -22,7 +22,7 @@ jobs:
         run: sudo apt -qq install ccache
       - uses: actions/cache@v2
         with:
-          path: ~/.ccache
+          path: $HOME/.ccache
           key: ccache-${{ matrix.env.ROS_DISTRO }}-${{ matrix.env.ROS_REPO }}-${{ github.sha }}  
           restore-keys: |
             ccache-${{ matrix.env.ROS_DISTRO }}-${{ matrix.env.ROS_REPO }}
