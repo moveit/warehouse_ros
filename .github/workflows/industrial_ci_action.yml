@@ -13,7 +13,7 @@ jobs:
           - {ROS_DISTRO: foxy, ROS_REPO: main}
           - {ROS_DISTRO: foxy, ROS_REPO: testing}
     env:
-      CCACHE_DIR: '$HOME/.ccache'
+      CCACHE_DIR: /home/runner/.ccache
       AFTER_BUILD_TARGET_WORKSPACE: 'ccache -s'
     runs-on: ubuntu-latest
     steps:
