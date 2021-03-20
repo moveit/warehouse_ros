@@ -13,7 +13,7 @@ jobs:
           - {ROS_DISTRO: foxy, ROS_REPO: main}
           - {ROS_DISTRO: foxy, ROS_REPO: testing}
     env:
-      CCACHE_DIR: /home/runner/.ccache
+      CCACHE_DIR: ~/.ccache
       AFTER_BUILD_TARGET_WORKSPACE: 'ccache -s'
     runs-on: ubuntu-latest
     steps:
@@ -22,7 +22,7 @@ jobs:
         run: sudo apt -qq install ccache
       - uses: actions/cache@v2
         with:
-          path: ${{ env.CCACHE_DIR }}
+          path: ~/.ccache
           key: ccache-${{ matrix.env.ROS_DISTRO }}-${{ matrix.env.ROS_REPO }}-${{ github.sha }}  
           restore-keys: |
             ccache-${{ matrix.env.ROS_DISTRO }}-${{ matrix.env.ROS_REPO }}
