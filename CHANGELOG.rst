@@ -2,6 +2,18 @@
 Changelog for package warehouse_ros
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+2.0.1 (2021-05-24)
+------------------
+
+* List OpenSSL as build depend (`#68 <https://github.com/ros-planning/warehouse_ros/issues/68>`_)
+* Update CI and add Rolling Test (`#69 <https://github.com/ros-planning/warehouse_ros/issues/69>`_)
+* Add badges for CI to README (`#62 <https://github.com/ros-planning/warehouse_ros/issues/62>`_)
+* Add python black formatter to pre-commit (`#66 <https://github.com/ros-planning/warehouse_ros/issues/66>`_)
+* Add copyright notices and test (`#53 <https://github.com/ros-planning/warehouse_ros/issues/53>`_)
+* Add github actions ci using industrial_ci (`#54 <https://github.com/ros-planning/warehouse_ros/issues/54>`_, `#55 <https://github.com/ros-planning/warehouse_ros/issues/55>`_)
+  * Enable ccache (`#56 <https://github.com/ros-planning/warehouse_ros/issues/56>`_, `#61 <https://github.com/ros-planning/warehouse_ros/issues/61>`_, `#65 <https://github.com/ros-planning/warehouse_ros/issues/65>`_)
+* Contributors: Tyler Weaver
+
 2.0.0 (2020-11-20)
 -----------
 * [maint] Fix `-Wcast-qual` compile warnings (`#49 <https://github.com/ros-planning/warehouse_ros/issues/49>`_)
