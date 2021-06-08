@@ -23,6 +23,10 @@ jobs:
             ROS_REPO: main
           - ROS_DISTRO: rolling
             ROS_REPO: testing
+          - ROS_DISTRO: galactic
+            ROS_REPO: main
+          - ROS_DISTRO: galactic
+            ROS_REPO: testing
     env:
       CCACHE_DIR: ${{ github.workspace }}/.ccache
       BASEDIR: ${{ github.workspace }}/.work
