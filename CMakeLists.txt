@@ -30,6 +30,7 @@ set(warehouse_srcs
   src/transform_collection.cpp)
 
 add_library(warehouse_ros SHARED ${warehouse_srcs})
+set_target_properties(warehouse_ros PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
 ament_target_dependencies(warehouse_ros
   rclcpp
   std_msgs
