@@ -50,6 +50,7 @@ public:
   virtual bool hasData() const = 0;
   virtual Metadata::ConstPtr metadata() const = 0;
   virtual std::string message() const = 0;
+  virtual ~ResultIteratorHelper() = default;
 
   typedef boost::shared_ptr<ResultIteratorHelper> Ptr;
 };
