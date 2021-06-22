@@ -48,9 +48,9 @@ MessageCollection<M>::MessageCollection(MessageCollectionHelper::Ptr collection)
   const std::string datatype = rosidl_generator_traits::data_type<M>();
   // TODO: Convert ros message MD5Sum value
   // typedef typename ros::message_traits::MD5Sum<M> Md5;
-  unsigned char result[MD5_DIGEST_LENGTH];
-  MD5((const unsigned char*)datatype.c_str(), datatype.size(), result);
-  const std::string md5_str = (char*)result;
+  std::string md5_str(MD5_DIGEST_LENGTH, '\0');
+  MD5(reinterpret_cast<const unsigned char*>(datatype.c_str()), datatype.size(),
+      reinterpret_cast<unsigned char*>(&md5_str[0]));
 
   md5sum_matches_ = collection_->initialize(datatype, md5_str);
 }
