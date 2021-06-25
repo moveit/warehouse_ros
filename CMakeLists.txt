@@ -57,7 +57,7 @@ ament_target_dependencies(warehouse_test_dbloader
 target_link_libraries(warehouse_test_dbloader warehouse_ros ${OPENSSL_CRYPTO_LIBRARY})
 
 ament_export_include_directories(include)
-ament_export_libraries(warehouse_ros)
+ament_export_targets(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
 ament_export_dependencies(rclcpp)
 ament_export_dependencies(std_msgs)
 ament_export_dependencies(geometry_msgs)
@@ -70,6 +70,7 @@ ament_export_dependencies(OpenSSL)
 
 install(
   TARGETS warehouse_ros
+  EXPORT export_${PROJECT_NAME}
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
   RUNTIME DESTINATION bin
