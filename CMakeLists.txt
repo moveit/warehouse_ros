@@ -42,6 +42,10 @@ ament_target_dependencies(warehouse_ros
   Boost
 )
 target_link_libraries(warehouse_ros ${OPENSSL_CRYPTO_LIBRARY})
+target_include_directories(warehouse_ros
+  PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  PUBLIC $<INSTALL_INTERFACE:include>
+)
 
 add_executable(warehouse_test_dbloader src/test_dbloader.cpp)
 ament_target_dependencies(warehouse_test_dbloader
@@ -56,7 +60,6 @@ ament_target_dependencies(warehouse_test_dbloader
 )
 target_link_libraries(warehouse_test_dbloader warehouse_ros ${OPENSSL_CRYPTO_LIBRARY})
 
-ament_export_include_directories(include)
 ament_export_targets(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
 ament_export_dependencies(rclcpp)
 ament_export_dependencies(std_msgs)
