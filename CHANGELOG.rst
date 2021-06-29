@@ -2,6 +2,18 @@
 Changelog for package warehouse_ros
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+2.0.2 (2021-06-29)
+------------------
+* Use ament_export_targets to fix exporting dependencies (`#80 <https://github.com/ros-planning/warehouse_ros/issues/80>`_)
+* Sync with kinetic-devel branch up-to https://github.com/ros-planning/warehouse_ros/commit/25c94751a96b02e46859fec36915c9e8f38106e5 (`#78 <https://github.com/ros-planning/warehouse_ros/issues/78>`_)
+* Fix MD5 calculation (`#79 <https://github.com/ros-planning/warehouse_ros/issues/79>`_)
+  MD5 checksums may contain NULLs, but are not guaranteed to be zero-terminated.
+  Co-authored-by: Bjar Ne <gleichdick@users.noreply.github.com>
+* [ROS2] Add prerelease tests (`#76 <https://github.com/ros-planning/warehouse_ros/issues/76>`_)
+* Add Galactic CI (`#75 <https://github.com/ros-planning/warehouse_ros/issues/75>`_)
+* Fix building on windows (`#73 <https://github.com/ros-planning/warehouse_ros/issues/73>`_)
+* Contributors: Akash, Bjar Ne, Jafar Abdi, Vatan Aksoy Tezer
+
 2.0.1 (2021-05-24)
 ------------------
 
