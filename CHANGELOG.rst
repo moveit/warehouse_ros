@@ -2,6 +2,11 @@
 Changelog for package warehouse_ros
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+2.0.3 (2021-06-29)
+------------------
+* Fix OpenSSL export, use package.xml format 3 (`#83 <https://github.com/ros-planning/warehouse_ros/issues/83>`_)
+* Contributors: Henning Kayser
+
 2.0.2 (2021-06-29)
 ------------------
 * Use ament_export_targets to fix exporting dependencies (`#80 <https://github.com/ros-planning/warehouse_ros/issues/80>`_)
