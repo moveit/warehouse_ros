@@ -2,8 +2,8 @@
 Changelog for package warehouse_ros
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.0.4 (2021-09-27)
+------------------
 * Updated tf2_geometry_msgs.h to tf2_geometry_msgs.hpp  (`#85 <https://github.com/ros-planning/warehouse_ros/issues/85>`_)
 * Contributors: Diego Rojas, Vatan Aksoy Tezer
 
