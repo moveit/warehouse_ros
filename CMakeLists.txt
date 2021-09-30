@@ -17,21 +17,17 @@ find_package(pluginlib REQUIRED)
 find_package(tf2 REQUIRED)
 find_package(tf2_ros REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
-find_package(Boost REQUIRED COMPONENTS system filesystem thread)
+find_package(Boost REQUIRED)
 find_package(OpenSSL REQUIRED)
-
-include_directories(
-  include
-  ${OPENSSL_INCLUDE_DIR}
-)
 
 set(warehouse_srcs
   src/database_loader.cpp
   src/transform_collection.cpp)
 
 add_library(warehouse_ros SHARED ${warehouse_srcs})
+target_link_libraries(warehouse_ros PUBLIC OpenSSL::Crypto)
 set_target_properties(warehouse_ros PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
-ament_target_dependencies(warehouse_ros
+ament_target_dependencies(warehouse_ros PUBLIC
   rclcpp
   std_msgs
   geometry_msgs
@@ -41,14 +37,13 @@ ament_target_dependencies(warehouse_ros
   tf2_geometry_msgs
   Boost
 )
-target_link_libraries(warehouse_ros ${OPENSSL_CRYPTO_LIBRARY})
 target_include_directories(warehouse_ros
   PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   PUBLIC $<INSTALL_INTERFACE:include>
 )
 
 add_executable(warehouse_test_dbloader src/test_dbloader.cpp)
-ament_target_dependencies(warehouse_test_dbloader
+ament_target_dependencies(warehouse_test_dbloader PUBLIC
   rclcpp
   std_msgs
   geometry_msgs
@@ -58,7 +53,7 @@ ament_target_dependencies(warehouse_test_dbloader
   tf2_geometry_msgs
   Boost
 )
-target_link_libraries(warehouse_test_dbloader warehouse_ros ${OPENSSL_CRYPTO_LIBRARY})
+target_link_libraries(warehouse_test_dbloader PUBLIC warehouse_ros)
 
 ament_export_targets(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
 ament_export_dependencies(rclcpp)
