@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(warehouse_ros)
 
-add_compile_options(-std=c++11)
-
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   rostime
@@ -29,6 +27,7 @@ set(warehouse_srcs
 add_library(warehouse_ros SHARED ${warehouse_srcs})
 
 target_link_libraries(warehouse_ros ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+target_compile_features(warehouse_ros PRIVATE cxx_defaulted_functions)
 
 add_executable(warehouse_test_dbloader src/test_dbloader.cpp)
 target_link_libraries(warehouse_test_dbloader warehouse_ros ${catkin_LIBRARIES} ${Boost_LIBRARIES})
