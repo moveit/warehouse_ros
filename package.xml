@@ -1,6 +1,6 @@
 <package>
   <name>warehouse_ros</name>
-  <version>0.9.4</version>
+  <version>0.9.5</version>
   <description>
     Persistent storage of ROS messages
   </description>
