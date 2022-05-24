@@ -44,7 +44,7 @@ repos:
         args: ['-fallback-style=none', '-i']
 
   - repo: https://github.com/psf/black
-    rev: 20.8b1
+    rev: 22.3.0
     hooks:
       - id: black
 
