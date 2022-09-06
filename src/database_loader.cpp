@@ -36,6 +36,11 @@ namespace warehouse_ros
 {
 using std::string;
 
+namespace {
+  constexpr auto WAREHOUSE_HOST = "warehouse_host";
+  constexpr auto WAREHOUSE_PORT = "warehouse_port";
+}
+
 DatabaseLoader::DatabaseLoader(const rclcpp::Node::SharedPtr& node) : node_(node)
 {
   initialize();
@@ -88,29 +93,18 @@ typename DatabaseConnection::Ptr DatabaseLoader::loadDatabase()
     return typename DatabaseConnection::Ptr(new DBConnectionStub());
   }
 
-  bool hostFound = false;
-  bool portFound = false;
+  // Get and set host name and port
+  const std::string host = "";
+  node_->get_parameter_or(WAREHOUSE_HOST, host, std::string("localhost"));
 
-  // TODO: Revise parameter lookup
-  // if (!nh_.searchParam("warehouse_host", paramName))
-  paramName = "warehouse_host";
-  std::string host;
-  node_->get_parameter_or(paramName, host, std::string("localhost"));
-  hostFound = true;
+  const int port = 0;
+  node_->get_parameter_or(WAREHOUSE_PORT, port, 33829);
 
-  // TODO: Revise parameter lookup
-  // if (!nh_.searchParam("warehouse_port", paramName))
-  paramName = "warehouse_port";
-  int port;
-  node_->get_parameter_or(paramName, port, 33829);
-  portFound = true;
-
-  if (hostFound && portFound)
-  {
-    db->setParams(host, port);
+  // If successful return database pointer
+  if(db->setParams(host, port)){
+    return db;
   }
-
-  return db;
+  return typename DatabaseConnection::Ptr(new DBConnectionStub());
 }
 
 MessageCollectionHelper::Ptr DBConnectionStub::openCollectionHelper(const std::string& /*db_name*/,
