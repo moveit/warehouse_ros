@@ -43,15 +43,6 @@ namespace {
 
 DatabaseLoader::DatabaseLoader(const rclcpp::Node::SharedPtr& node) : node_(node)
 {
-  initialize();
-}
-
-DatabaseLoader::~DatabaseLoader()
-{
-}
-
-void DatabaseLoader::initialize()
-{
   // Create the plugin loader.
   try
   {
