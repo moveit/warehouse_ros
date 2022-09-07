@@ -32,14 +32,19 @@
 
 namespace warehouse_ros
 {
-using std::string;
-
 namespace
 {
 const rclcpp::Logger LOGGER = rclcpp::get_logger("warehouse_ros.database_loader");
-constexpr auto WAREHOUSE_PLUGIN = "warehouse_plugin";
-constexpr auto WAREHOUSE_HOST = "warehouse_host";
-constexpr auto WAREHOUSE_PORT = "warehouse_port";
+
+// Parameter names
+const std::string WAREHOUSE_PLUGIN = "warehouse_plugin";
+const std::string WAREHOUSE_HOST = "warehouse_host";
+const std::string WAREHOUSE_PORT = "warehouse_port";
+
+// Default values
+const std::string WAREHOUSE_PLUGIN_DEFAULT = "warehouse_ros_mongo::MongoDatabaseConnection";
+const std::string WAREHOUSE_HOST_DEFAULT = "localhost";
+constexpr auto WAREHOUSE_PORT_DEFAULT = 33829;
 }  // namespace
 
 DatabaseLoader::DatabaseLoader(const rclcpp::Node::SharedPtr& node) : node_(node)
@@ -66,21 +71,27 @@ typename DatabaseConnection::Ptr DatabaseLoader::loadDatabase()
 
   // Search for the warehouse_plugin parameter in the local namespace of the node, and up the tree of namespaces.
   // If the desired param is not found, make a final attempt to look for the param in the default namespace
-  string db_plugin = "";
-  if (!node_->get_parameter_or(WAREHOUSE_PLUGIN, db_plugin,
-                               std::string("warehouse_ros_mongo::MongoDatabaseConnection")))
-    RCLCPP_ERROR(LOGGER, "Could not find parameter for database plugin name %s", db_plugin.c_str());
-
+  std::string db_plugin = WAREHOUSE_PLUGIN_DEFAULT;
+  if (!node_->get_parameter_or(WAREHOUSE_PLUGIN, db_plugin, WAREHOUSE_PLUGIN_DEFAULT))
+  {
+    RCLCPP_ERROR(LOGGER, "Could not find parameter '%s' using default '%s'", WAREHOUSE_PLUGIN.c_str(),
+                 db_plugin.c_str());
+  }
   try
   {
     DatabaseConnection::Ptr db = db_plugin_loader_->createUniqueInstance(db_plugin);
 
     // Get and set host name and port
-    std::string host = "";
-    node_->get_parameter_or(WAREHOUSE_HOST, host, std::string("localhost"));
-
-    int port = 0;
-    node_->get_parameter_or(WAREHOUSE_PORT, port, 33829);
+    std::string host = WAREHOUSE_HOST_DEFAULT;
+    if (!node_->get_parameter_or(WAREHOUSE_HOST, host, WAREHOUSE_HOST_DEFAULT))
+    {
+      RCLCPP_ERROR(LOGGER, "Could not find parameter '%s' using default '%s'", WAREHOUSE_HOST.c_str(), host.c_str());
+    }
+    int port = WAREHOUSE_PORT_DEFAULT;
+    if (!node_->get_parameter_or(WAREHOUSE_PORT, port, WAREHOUSE_PORT_DEFAULT))
+    {
+      RCLCPP_ERROR(LOGGER, "Could not find parameter '%s' using default '%i'", WAREHOUSE_PORT.c_str(), port);
+    }
 
     // If successful return database pointer
     if (db->setParams(host, port))
