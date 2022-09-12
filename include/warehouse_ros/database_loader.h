@@ -76,7 +76,7 @@ public:
   /// \brief Takes a warehouse_ros DatabaseConnection.
   /// The DatabaseConnection is expected to have already been initialized.
   DatabaseLoader(const rclcpp::Node::SharedPtr& node);
-  virtual ~DatabaseLoader() = default;
+  ~DatabaseLoader(){};
 
   /** \brief Load a database connection using pluginlib
    Looks for ROS params specifying which plugin/host/port to use. NodeHandle::searchParam()
