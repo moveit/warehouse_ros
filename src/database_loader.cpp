@@ -30,28 +30,31 @@
 
 #include <warehouse_ros/database_loader.h>
 
-static const rclcpp::Logger LOGGER = rclcpp::get_logger("warehouse_ros.database_loader");
-
 namespace warehouse_ros
 {
-using std::string;
+namespace
+{
+const rclcpp::Logger LOGGER = rclcpp::get_logger("warehouse_ros.database_loader");
+
+// Parameter names
+const std::string WAREHOUSE_PLUGIN = "warehouse_plugin";
+const std::string WAREHOUSE_HOST = "warehouse_host";
+const std::string WAREHOUSE_PORT = "warehouse_port";
+
+// Default values
+const std::string WAREHOUSE_PLUGIN_DEFAULT = "warehouse_ros_mongo::MongoDatabaseConnection";
+const std::string WAREHOUSE_HOST_DEFAULT = "localhost";
+constexpr auto WAREHOUSE_PORT_DEFAULT = 33829;
+}  // namespace
 
 DatabaseLoader::DatabaseLoader(const rclcpp::Node::SharedPtr& node) : node_(node)
-{
-  initialize();
-}
-
-DatabaseLoader::~DatabaseLoader()
-{
-}
-
-void DatabaseLoader::initialize()
 {
   // Create the plugin loader.
   try
   {
-    db_plugin_loader_.reset(new pluginlib::ClassLoader<DatabaseConnection>("warehouse_ros", "warehouse_ros::"
-                                                                                            "DatabaseConnection"));
+    db_plugin_loader_ = std::make_unique<pluginlib::ClassLoader<DatabaseConnection>>("warehouse_ros", "warehouse_ros::"
+                                                                                                      "DatabaseConnecti"
+                                                                                                      "on");
   }
   catch (pluginlib::PluginlibException& ex)
   {
@@ -68,18 +71,34 @@ typename DatabaseConnection::Ptr DatabaseLoader::loadDatabase()
 
   // Search for the warehouse_plugin parameter in the local namespace of the node, and up the tree of namespaces.
   // If the desired param is not found, make a final attempt to look for the param in the default namespace
-  string paramName;
-  // TODO: Revise parameter lookup
-  // if (!nh_.searchParam("warehouse_plugin", paramName))
-  paramName = "warehouse_plugin";
-  string db_plugin;
-  if (!node_->get_parameter_or(paramName, db_plugin, std::string("warehouse_ros_mongo::MongoDatabaseConnection")))
-    RCLCPP_ERROR(LOGGER, "Could not find parameter for database plugin name %s", db_plugin.c_str());
-
-  DatabaseConnection::Ptr db;
+  std::string db_plugin = WAREHOUSE_PLUGIN_DEFAULT;
+  if (!node_->get_parameter_or(WAREHOUSE_PLUGIN, db_plugin, WAREHOUSE_PLUGIN_DEFAULT))
+  {
+    RCLCPP_ERROR(LOGGER, "Could not find parameter '%s' using default '%s'", WAREHOUSE_PLUGIN.c_str(),
+                 db_plugin.c_str());
+  }
   try
   {
-    db = db_plugin_loader_->createUniqueInstance(db_plugin);
+    DatabaseConnection::Ptr db = db_plugin_loader_->createUniqueInstance(db_plugin);
+
+    // Get and set host name and port
+    std::string host = WAREHOUSE_HOST_DEFAULT;
+    if (!node_->get_parameter_or(WAREHOUSE_HOST, host, WAREHOUSE_HOST_DEFAULT))
+    {
+      RCLCPP_ERROR(LOGGER, "Could not find parameter '%s' using default '%s'", WAREHOUSE_HOST.c_str(), host.c_str());
+    }
+    int port = WAREHOUSE_PORT_DEFAULT;
+    if (!node_->get_parameter_or(WAREHOUSE_PORT, port, WAREHOUSE_PORT_DEFAULT))
+    {
+      RCLCPP_ERROR(LOGGER, "Could not find parameter '%s' using default '%i'", WAREHOUSE_PORT.c_str(), port);
+    }
+
+    // If successful return database pointer
+    if (db->setParams(host, port))
+    {
+      return db;
+    }
+    return typename DatabaseConnection::Ptr(new DBConnectionStub());
   }
   catch (pluginlib::PluginlibException& ex)
   {
@@ -87,30 +106,6 @@ typename DatabaseConnection::Ptr DatabaseLoader::loadDatabase()
                         "Exception while loading database plugin '" << db_plugin << "': " << ex.what() << std::endl);
     return typename DatabaseConnection::Ptr(new DBConnectionStub());
   }
-
-  bool hostFound = false;
-  bool portFound = false;
-
-  // TODO: Revise parameter lookup
-  // if (!nh_.searchParam("warehouse_host", paramName))
-  paramName = "warehouse_host";
-  std::string host;
-  node_->get_parameter_or(paramName, host, std::string("localhost"));
-  hostFound = true;
-
-  // TODO: Revise parameter lookup
-  // if (!nh_.searchParam("warehouse_port", paramName))
-  paramName = "warehouse_port";
-  int port;
-  node_->get_parameter_or(paramName, port, 33829);
-  portFound = true;
-
-  if (hostFound && portFound)
-  {
-    db->setParams(host, port);
-  }
-
-  return db;
 }
 
 MessageCollectionHelper::Ptr DBConnectionStub::openCollectionHelper(const std::string& /*db_name*/,

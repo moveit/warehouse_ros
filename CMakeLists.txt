@@ -1,11 +1,11 @@
-cmake_minimum_required(VERSION 3.10.2)
+cmake_minimum_required(VERSION 3.16.3)
 project(warehouse_ros)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+if(CMAKE_CXX_COMPILER_ID MATCHES "(GNU|Clang)")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
@@ -20,14 +20,7 @@ find_package(tf2_geometry_msgs REQUIRED)
 find_package(Boost REQUIRED)
 find_package(OpenSSL REQUIRED)
 
-set(warehouse_srcs
-  src/database_loader.cpp
-  src/transform_collection.cpp)
-
-add_library(warehouse_ros SHARED ${warehouse_srcs})
-target_link_libraries(warehouse_ros PUBLIC OpenSSL::Crypto)
-set_target_properties(warehouse_ros PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
-ament_target_dependencies(warehouse_ros PUBLIC
+set(THIS_PACKAGE_INCLUDE_DEPENDS
   rclcpp
   std_msgs
   geometry_msgs
@@ -35,6 +28,15 @@ ament_target_dependencies(warehouse_ros PUBLIC
   tf2
   tf2_ros
   tf2_geometry_msgs
+)
+
+add_library(warehouse_ros SHARED
+  src/database_loader.cpp
+  src/transform_collection.cpp
+)
+target_link_libraries(warehouse_ros PUBLIC OpenSSL::Crypto)
+set_target_properties(warehouse_ros PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
+ament_target_dependencies(warehouse_ros PUBLIC ${THIS_PACKAGE_INCLUDE_DEPENDS}
   Boost
 )
 target_include_directories(warehouse_ros
@@ -43,28 +45,10 @@ target_include_directories(warehouse_ros
 )
 
 add_executable(warehouse_test_dbloader src/test_dbloader.cpp)
-ament_target_dependencies(warehouse_test_dbloader PUBLIC
-  rclcpp
-  std_msgs
-  geometry_msgs
-  pluginlib
-  tf2
-  tf2_ros
-  tf2_geometry_msgs
+ament_target_dependencies(warehouse_test_dbloader PUBLIC ${THIS_PACKAGE_INCLUDE_DEPENDS}
   Boost
 )
 target_link_libraries(warehouse_test_dbloader PUBLIC warehouse_ros)
-
-ament_export_targets(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
-ament_export_dependencies(rclcpp)
-ament_export_dependencies(std_msgs)
-ament_export_dependencies(geometry_msgs)
-ament_export_dependencies(pluginlib)
-ament_export_dependencies(tf2)
-ament_export_dependencies(tf2_ros)
-ament_export_dependencies(tf2_geometry_msgs)
-ament_export_dependencies(Boost)
-ament_export_dependencies(OpenSSL)
 
 install(
   TARGETS warehouse_ros
@@ -82,8 +66,14 @@ install(
 install(
   DIRECTORY include/
   DESTINATION include
-  FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp"
 )
+
+install(DIRECTORY include/ DESTINATION include)
+
+ament_export_targets(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
+ament_export_dependencies(${THIS_PACKAGE_INCLUDE_DEPENDS})
+ament_export_dependencies(Boost)
+ament_export_dependencies(OpenSSL)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
