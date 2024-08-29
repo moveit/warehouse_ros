@@ -2,6 +2,13 @@
 Changelog for package warehouse_ros
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+2.0.5 (2024-08-29)
+------------------
+* Add constructor taking a NodeParametersInterface (`#97 <https://github.com/ros-planning/warehouse_ros/issues/97>`_)
+* Refactor processing of parameters in loadDatabase() (`#94 <https://github.com/ros-planning/warehouse_ros/issues/94>`_)
+* Fix public OpenSSL dependency (`#86 <https://github.com/ros-planning/warehouse_ros/issues/86>`_)
+* Contributors: Bjar Ne, Calen Robinson, Robert Haschke, Sebastian Jahr, Vatan Aksoy Tezer
+
 2.0.4 (2021-09-27)
 ------------------
 * Updated tf2_geometry_msgs.h to tf2_geometry_msgs.hpp  (`#85 <https://github.com/ros-planning/warehouse_ros/issues/85>`_)
@@ -37,7 +44,7 @@ Changelog for package warehouse_ros
 * Contributors: Tyler Weaver
 
 2.0.0 (2020-11-20)
------------
+------------------
 * [maint] Fix `-Wcast-qual` compile warnings (`#49 <https://github.com/ros-planning/warehouse_ros/issues/49>`_)
 * [ros2-migration] Port to ROS 2 (`#48 <https://github.com/ros-planning/warehouse_ros/issues/48>`_)
   * Migrate CMakeLists.txt, package.xml to ROS 2
