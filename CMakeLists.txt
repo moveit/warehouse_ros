@@ -21,13 +21,13 @@ find_package(Boost REQUIRED)
 find_package(OpenSSL REQUIRED)
 
 set(THIS_PACKAGE_INCLUDE_DEPENDS
-  rclcpp
-  std_msgs
-  geometry_msgs
-  pluginlib
-  tf2
-  tf2_ros
-  tf2_geometry_msgs
+  rclcpp::rclcpp
+  ${std_msgs_TARGETS}
+  ${geometry_msgs_TARGETS}
+  pluginlib::pluginlib
+  tf2::tf2
+  tf2_ros::tf2_ros
+  ${tf2_geometry_msgs_TARGETS}
 )
 
 add_library(warehouse_ros SHARED
@@ -36,8 +36,8 @@ add_library(warehouse_ros SHARED
 )
 target_link_libraries(warehouse_ros PUBLIC OpenSSL::Crypto)
 set_target_properties(warehouse_ros PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
-ament_target_dependencies(warehouse_ros PUBLIC ${THIS_PACKAGE_INCLUDE_DEPENDS}
-  Boost
+target_link_libraries(warehouse_ros PUBLIC ${THIS_PACKAGE_INCLUDE_DEPENDS}
+  ${Boost_LIBRARIES}
 )
 target_include_directories(warehouse_ros
   PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -45,10 +45,10 @@ target_include_directories(warehouse_ros
 )
 
 add_executable(warehouse_test_dbloader src/test_dbloader.cpp)
-ament_target_dependencies(warehouse_test_dbloader PUBLIC ${THIS_PACKAGE_INCLUDE_DEPENDS}
-  Boost
+target_link_libraries(warehouse_test_dbloader PUBLIC warehouse_ros ${THIS_PACKAGE_INCLUDE_DEPENDS}
+  ${Boost_LIBRARIES}
 )
-target_link_libraries(warehouse_test_dbloader PUBLIC warehouse_ros)
+target_link_libraries(warehouse_test_dbloader PUBLIC )
 
 install(
   TARGETS warehouse_ros
