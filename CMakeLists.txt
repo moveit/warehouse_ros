@@ -73,7 +73,8 @@ ament_export_dependencies(
   tf2
   tf2_ros
   tf2_geometry_msgs
-  BoostOpenSSL)
+  Boost
+  OpenSSL)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
