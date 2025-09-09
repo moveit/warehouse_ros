@@ -50,8 +50,6 @@
 #include <tf2_ros/buffer.h>
 #endif
 
-
-
 namespace warehouse_ros
 {
 /// This abstract base class just makes it easier to write code that works for
