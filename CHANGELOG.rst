@@ -2,6 +2,12 @@
 Changelog for package warehouse_ros
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+2.0.6 (2026-02-16)
+------------------
+* Fix deprecation of tf2_ros/buffer.h (`#104 <https://github.com/ros-planning/warehouse_ros/issues/104>`_)
+* Replace ament_target_dependencies with target_link_libraries (`#99 <https://github.com/ros-planning/warehouse_ros/issues/99>`_)
+* Contributors: Alejandro Hernández Cordero, Robert Haschke, mosfet80
+
 2.0.5 (2024-08-29)
 ------------------
 * Add constructor taking a NodeParametersInterface (`#97 <https://github.com/ros-planning/warehouse_ros/issues/97>`_)
