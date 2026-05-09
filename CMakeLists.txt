@@ -17,7 +17,6 @@ find_package(pluginlib REQUIRED)
 find_package(tf2 REQUIRED)
 find_package(tf2_ros REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
-find_package(Boost REQUIRED)
 find_package(OpenSSL REQUIRED)
 
 add_library(warehouse_ros SHARED
@@ -34,7 +33,6 @@ target_link_libraries(warehouse_ros PUBLIC
   tf2::tf2
   tf2_ros::tf2_ros
   ${tf2_geometry_msgs_TARGETS}
-  ${Boost_LIBRARIES}
 )
 target_include_directories(warehouse_ros
   PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -73,7 +71,6 @@ ament_export_dependencies(
   tf2
   tf2_ros
   tf2_geometry_msgs
-  Boost
   OpenSSL)
 
 if(BUILD_TESTING)
