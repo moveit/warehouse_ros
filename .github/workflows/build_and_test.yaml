@@ -13,10 +13,12 @@ on:
 jobs:
   industrial_ci:
     strategy:
+      fail-fast: false
       matrix:
         env:
           - {ROS_DISTRO: rolling, ROS_REPO: main}
           - {ROS_DISTRO: rolling, ROS_REPO: testing}
+          - {ROS_DISTRO: jazzy, ROS_REPO: main}
           - {ROS_DISTRO: humble, ROS_REPO: main}
     env:
       CCACHE_DIR: ${{ github.workspace }}/.ccache
