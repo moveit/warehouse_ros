@@ -9,7 +9,7 @@ find_package(catkin REQUIRED COMPONENTS
   pluginlib
   tf
 )
-find_package(Boost COMPONENTS system filesystem thread)
+find_package(Boost COMPONENTS filesystem thread)
 
 catkin_package(
   INCLUDE_DIRS include
