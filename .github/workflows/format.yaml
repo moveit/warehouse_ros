@@ -14,6 +14,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v7
-    - name: Install clang-format-14
-      run: sudo apt-get install clang-format-14
+    - name: Install clang-format-21
+      run: sudo apt-get install clang-format-21
     - uses: pre-commit/action@v3.0.1
