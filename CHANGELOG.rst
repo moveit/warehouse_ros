@@ -2,8 +2,8 @@
 Changelog for package warehouse_ros
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.0.7 (2026-08-03)
+------------------
 * Replace outdated tf2 includes (switching from .h to .hpp)
   ``tf2_ros`` removed the deprecated ``.h`` headers, so the public
   ``transform_collection.h`` no longer compiles on Ubuntu Resolute. The
