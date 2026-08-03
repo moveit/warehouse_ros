@@ -2,6 +2,17 @@
 Changelog for package warehouse_ros
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Replace outdated tf2 includes (switching from .h to .hpp)
+  ``tf2_ros`` removed the deprecated ``.h`` headers, so the public
+  ``transform_collection.h`` no longer compiles on Ubuntu Resolute. The
+  ``__has_include`` fallback for the ``.h`` spelling goes away with it; every
+  supported distro ships the ``.hpp`` headers, humble included.
+* CI: Fix CI workflow
+* CI: Update GHA (`#107 <https://github.com/moveit/warehouse_ros/issues/107>`_)
+* Contributors: Robert Haschke, mosfet80
+
 2.0.6 (2026-02-16)
 ------------------
 * Fix deprecation of tf2_ros/buffer.h (`#104 <https://github.com/ros-planning/warehouse_ros/issues/104>`_)
