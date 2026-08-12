@@ -104,10 +104,9 @@ public:
   {
     timeout_ = tf2::durationFromSec(timeout);
 
-    node_ = rclcpp::Node::make_shared("LiveTransformSource");
     rclcpp::Clock::SharedPtr clock = std::make_shared<rclcpp::Clock>(RCL_SYSTEM_TIME);
     tf_buffer_ = std::make_shared<tf2_ros::Buffer>(clock);
-    tf_ = std::make_shared<tf2_ros::TransformListener>(*tf_buffer_, node_, false);
+    tf_ = std::make_shared<tf2_ros::TransformListener>(*tf_buffer_, /*spin_thread=*/false);
   }
 
   /// Will return the transform if it becomes available before the timeout
@@ -122,7 +121,6 @@ public:
   }
 
 private:
-  rclcpp::Node::SharedPtr node_;
   std::shared_ptr<tf2_ros::Buffer> tf_buffer_;
   std::shared_ptr<tf2_ros::TransformListener> tf_;
   tf2::Duration timeout_;
