@@ -2,6 +2,24 @@
 Changelog for package warehouse_ros
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge pull request `#111 <https://github.com/moveit/warehouse_ros/issues/111>`_ from moveit/nbbrooks/ci-matrix-distro-coverage
+  ci: cover kilted and lyrical, drop the impossible rolling-main job
+* ci: cover kilted and lyrical, and drop the impossible rolling-main job
+  Rolling's `main` apt repo has no Resolute packages, so rolling+main cannot
+  install and has been failing since at least 2026-07-13. Replace it with
+  kilted and lyrical, matching moveit_visual_tools`#157 <https://github.com/moveit/warehouse_ros/issues/157>`_ and
+  rviz_visual_tools`#301 <https://github.com/moveit/warehouse_ros/issues/301>`_.
+  Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+* Merge pull request `#110 <https://github.com/moveit/warehouse_ros/issues/110>`_ from moveit/nbbrooks/fix-transform-listener-rolling
+  Fix Rolling build: TransformListener node-pointer ctor removed in tf2_ros 0.46.2
+* Let TransformListener own its node in LiveTransformSource
+  Use the buffer-only tf2_ros::TransformListener constructor instead of
+  passing a node, and drop the now-unused node\_ member.
+  Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+* Contributors: Nathan Brooks
+
 2.0.7 (2026-08-03)
 ------------------
 * Replace outdated tf2 includes (switching from .h to .hpp)
