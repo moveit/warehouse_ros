@@ -2,8 +2,8 @@
 Changelog for package warehouse_ros
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.0.8 (2026-08-11)
+------------------
 * Merge pull request `#111 <https://github.com/moveit/warehouse_ros/issues/111>`_ from moveit/nbbrooks/ci-matrix-distro-coverage
   ci: cover kilted and lyrical, drop the impossible rolling-main job
 * ci: cover kilted and lyrical, and drop the impossible rolling-main job
