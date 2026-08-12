@@ -16,10 +16,19 @@ jobs:
       fail-fast: false
       matrix:
         env:
-          - {ROS_DISTRO: rolling, ROS_REPO: main}
-          - {ROS_DISTRO: rolling, ROS_REPO: testing}
-          - {ROS_DISTRO: jazzy, ROS_REPO: main}
-          - {ROS_DISTRO: humble, ROS_REPO: main}
+          - ROS_DISTRO: humble
+            ROS_REPO: main
+          - ROS_DISTRO: jazzy
+            ROS_REPO: main
+          - ROS_DISTRO: kilted
+            ROS_REPO: main
+          - ROS_DISTRO: lyrical
+            ROS_REPO: main
+            OS_CODE_NAME: resolute
+          # Rolling's `main` apt repo has no Resolute packages, so track `testing`.
+          - ROS_DISTRO: rolling
+            ROS_REPO: testing
+            OS_CODE_NAME: resolute
     env:
       CCACHE_DIR: ${{ github.workspace }}/.ccache
       BASEDIR: ${{ github.workspace }}/.work
@@ -27,6 +36,7 @@ jobs:
 
     name: ${{ matrix.env.ROS_DISTRO }}-${{ matrix.env.ROS_REPO }}
     runs-on: ubuntu-latest
+    continue-on-error: ${{ matrix.env.NONBLOCKING || false }}
     steps:
       - uses: actions/checkout@v7
       # The target directory cache doesn't include the source directory because
