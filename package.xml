@@ -11,7 +11,7 @@
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
-  <depend>boost</depend>
+  <depend>libboost-dev</depend>
   <depend>libssl-dev</depend>
   <depend>rclcpp</depend>
   <depend>std_msgs</depend>
