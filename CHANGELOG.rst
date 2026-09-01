@@ -2,6 +2,11 @@
 Changelog for package warehouse_ros
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+2.0.9 (2026-09-01)
+------------------
+* Cleanup Boost dependency (`#112 <https://github.com/ros-planning/warehouse_ros/issues/112>`_)
+* Contributors: Robert Haschke
+
 2.0.8 (2026-08-11)
 ------------------
 * Merge pull request `#111 <https://github.com/moveit/warehouse_ros/issues/111>`_ from moveit/nbbrooks/ci-matrix-distro-coverage
