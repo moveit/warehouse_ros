@@ -17,24 +17,16 @@ jobs:
       matrix:
         env:
           - ROS_DISTRO: humble
-            ROS_REPO: main
           - ROS_DISTRO: jazzy
-            ROS_REPO: main
           - ROS_DISTRO: kilted
-            ROS_REPO: main
           - ROS_DISTRO: lyrical
-            ROS_REPO: main
-            OS_CODE_NAME: resolute
-          # Rolling's `main` apt repo has no Resolute packages, so track `testing`.
           - ROS_DISTRO: rolling
-            ROS_REPO: testing
-            OS_CODE_NAME: resolute
     env:
       CCACHE_DIR: ${{ github.workspace }}/.ccache
       BASEDIR: ${{ github.workspace }}/.work
-      CACHE_PREFIX: ${{ matrix.env.ROS_DISTRO }}-${{ matrix.env.ROS_REPO }}
+      CACHE_PREFIX: ${{ matrix.env.ROS_DISTRO }}
 
-    name: ${{ matrix.env.ROS_DISTRO }}-${{ matrix.env.ROS_REPO }}
+    name: ${{ matrix.env.ROS_DISTRO }}
     runs-on: ubuntu-latest
     continue-on-error: ${{ matrix.env.NONBLOCKING || false }}
     steps:
