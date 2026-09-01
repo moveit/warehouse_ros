@@ -17,7 +17,7 @@ find_package(pluginlib REQUIRED)
 find_package(tf2 REQUIRED)
 find_package(tf2_ros REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
-find_package(Boost REQUIRED)
+find_package(Boost CONFIG REQUIRED)
 find_package(OpenSSL REQUIRED)
 
 add_library(warehouse_ros SHARED
